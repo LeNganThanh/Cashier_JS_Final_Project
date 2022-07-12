@@ -1,20 +1,4 @@
 "use strict";
-//Making a bill
-// class Bill {
-//   constructor() {
-//     this.products = [];
-//     this.shop = [];
-//     this.billCode = "";
-//     this.billDate = "";
-//   }
-//   //Setting the bill values
-//   getTotal() {
-//     //   let value = this.product.productCode.map(item => item.productCode === code);
-//     //   console.log(value);
-//   }
-// }
-// const bill1 = new Bill();
-// //bill1.getTotal();
 
 //Create a virtual shop.
 class Shop {
@@ -26,7 +10,7 @@ class Shop {
   }
 }
 
-//Setting the products
+//Getting products
 class Products {
   constructor(productName, productCode, price, unit) {
     this.productCode = productCode;
@@ -40,16 +24,21 @@ class Products {
     this.price = this.price - (this.price / 100) * num;
   }
 }
+//get product to Products list
 const rice = new Products("Rice", 123, 23.75, "23kg Package");
 const noodle = new Products("Instance Noodle", 3657, 13.55, "25 Packs Box");
-rice.getReduce(10);
+rice.getReduce(10); //set the reduce for product
 
-//Setting Products Manager
+//-----------------------BILL-------------------------//
+
+//Setting Bill
 class Billing extends Shop {
   constructor(shopName, shopAddress, email, tel) {
     super(shopName, shopAddress, email, tel);
     this.products = [];
     this.bill = {};
+    this.billDate = "";
+    this.billNumber = "";
   }
   //Adding product
   addProduct(...products) {
@@ -89,18 +78,57 @@ class Billing extends Shop {
   shoppingToText() {
     let textShoppingItems = "";
     for (let [item, price] of Object.entries(this.bill)) {
-      textShoppingItems += `${item}: ${price}€
-                        `;
+      textShoppingItems += `
+        ${item.padEnd(15, " ")}: ${price}€`;
     }
     return textShoppingItems;
   }
+  //Setting the bill date
+  getDate() {
+    let monthArr = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    let today = new Date();
+    let todayMonth = today.getMonth();
+    return (this.billDate = ` ${today
+      .getDate()
+      .toString()
+      .padStart(2, "0")} - ${monthArr[todayMonth]} - ${today.getFullYear()}`);
+  }
+
+  //Setting the bill number
+  getBillNr() {
+    let today = new Date();
+    this.billNumber =
+      today.getDate().toString() +
+      (today.getMonth() + 1).toString().padStart(2, "0") +
+      today.getFullYear().toString() +
+      "00";
+    this.billNumber += 1;
+    return this.billNumber;
+  }
   //Working on the Bill
   getChange(num, cbChange) {
+    //Checking if customer pay by Credit Card
+    if (num === "card") return "You paid by Card.";
+
     //Count the total amount of all items.
     let sumOfBill = Object.values(this.bill).reduce(
       (sum, price) => sum + price,
       0
     );
+
     //Checking if the given amount is less than the bill
     if (num < sumOfBill) console.log("Your paid is not enough!");
     //Checking if just right paying amount.
@@ -113,12 +141,24 @@ class Billing extends Shop {
       console.log(`
         ------------------THE BILL------------------
 
-        Shop : ${this.shopName}.
-        Shopping items: ${this.shoppingToText()}
-        Total: ${sumOfBill}€
-        Your paid: ${num}€
-        Your change is ${cbChange(change)}
-        `); //Make the change by calling a callback function.
+        Bill Nr. ${this.getBillNr().padStart(13, " ")}
+        Bill Date.${this.getDate()}
+
+        --------------------------------------------
+
+        Shopping items ${this.shoppingToText()}
+        Total : ${sumOfBill.toString().padStart(13, " ")}€
+        Your paid : ${num.toString().padStart(8, " ")}€
+        You get back : ${change.toString().padStart(6, " ")}€
+        Your change :  ${cbChange(change, num)}
+
+        --------------------------------------------
+
+        Shop : ${this.shopName.padStart(15, " ")}
+        Address : ${this.shopAddress}
+        Tel : ${this.tel.toString().padStart(13, " ")}
+        Email : ${this.email.padStart(22, " ")}
+        `);
     }
   }
 }
@@ -134,9 +174,10 @@ productMan1.makeBill(noodle, 1); //buying product - adding to bill
 
 //getChange function get paid from customer and using callback function to count the change
 productMan1.getChange(100, countChange);
+//console.log(productMan1.getChange("card"));
 
-//Setting a callback function to make a Change.
-function countChange(sum) {
+//Setting a callback function to make the Change.
+function countChange(sum, givenSum) {
   const round = [
     //array of full Euro notes and coins
     ["oneHundredNote", 100, 20],
@@ -149,13 +190,29 @@ function countChange(sum) {
   ];
   const coins = [
     //array of all Euro cents
-    ["fiftyCoin", 50, 100],
-    ["twentyCoin", 20, 100],
-    ["tenCoin", 10, 100],
-    ["fiveCentCoin", 5, 100],
-    ["twoCentCoin", 2, 100],
-    ["oneCentCoin", 1, 100],
+    ["fiftyCoin", 50, 200],
+    ["twentyCoin", 20, 200],
+    ["tenCoin", 10, 200],
+    ["fiveCentCoin", 5, 200],
+    ["twoCentCoin", 2, 500],
+    ["oneCentCoin", 1, 500],
   ];
+
+  //adding the paid amount to Cashier
+  let giveNote = {};
+  //get the value of note and amount of note
+  const roundArr = round.reduce((arr, cur) => arr.concat(cur[1]), []);
+  let roundNote = amountToChange(givenSum, roundArr);
+  roundNote.forEach(val => (giveNote[val] = (giveNote[val] || 0) + 1));
+
+  //loop through the round array to add the amount of note has given.
+  for (let [note, amount] of Object.entries(giveNote)) {
+    for (let i = 0; i < round.length; i++) {
+      if (round[i][1] === Number(note)) round[i][2] += amount;
+    }
+  }
+  //console.log(round);
+
   //get the cents out of amount of bill
   const cents = Number((sum - Math.floor(sum)).toFixed(2) * 100);
 
@@ -168,10 +225,22 @@ function countChange(sum) {
   let getRoundChange = {}; //counting the round change
   let getCoinsChange = {}; //counting the coins change
 
-  let toText = "";
+  let toText = ""; //Get details of change
+
   //get array of full Euro values to give back the change
   if (roundSum > 0) {
-    const roundArr = round.reduce((arr, cur) => arr.concat(cur[1]), []);
+    let roundCopyArr = round; //Get a copy to splice in case of no values notes
+    //loop through to check if any cash is 0
+    for (let i = 0; i < round.length; i++) {
+      if (round[i][2] === 0) {
+        let idxOfNoCash = 0;
+        round.forEach(val => {
+          if (val[2] === 0) idxOfNoCash = round.indexOf(val);
+        });
+        roundCopyArr.splice(idxOfNoCash, 1); //splice value 0 out of array
+      }
+    }
+    const roundArr = roundCopyArr.reduce((arr, cur) => arr.concat(cur[1]), []);
     roundChange = amountToChange(roundSum, roundArr);
     roundChange.forEach(
       val => (getRoundChange[val] = (getRoundChange[val] || 0) + 1)
@@ -180,19 +249,55 @@ function countChange(sum) {
 
   //array of all coins of cents values to give back the change
   if (cents > 0) {
-    const coinsArr = coins.reduce((arr, cur) => arr.concat(cur[1]), []);
+    let coinsCopyArr = coins; //Get a copy to splice in case of no values coins
+    //loop to check if it is enough coins
+    for (let i = 0; i < coins.length; i++) {
+      if (coins[i][2] === 0) {
+        let idxOfNoCoin = 0;
+        coins.forEach(val => {
+          if (val[2] === 0) idxOfNoCoin = coins.indexOf(val);
+        });
+        coinsCopyArr.splice(idxOfNoCoin, 1); //if any coins value is 0 then delete out of array
+      }
+    }
+    const coinsArr = coinsCopyArr.reduce((arr, cur) => arr.concat(cur[1]), []);
     coinsChange = amountToChange(cents, coinsArr);
     coinsChange.forEach(
       val => (getCoinsChange[val] = (getCoinsChange[val] || 0) + 1)
     );
   } else if (cents === 0) coinsChange = cents;
+
+  //get printout the change
   for (let [note, amount] of Object.entries(getRoundChange)) {
-    toText += `${amount} of ${note}€, `;
+    //minus the note amount
+    for (let i = 0; i < round.length; i++) {
+      if (round[i][1] === Number(note)) {
+        round[i][2] -= Number(amount);
+      }
+    }
+
+    //get printout the note change (1€ and 2€ are only coins)
+    if (note === "1" || note === "2")
+      toText += `  ${amount} x ${note}€ coin
+                       `;
+    else
+      toText += `  ${amount} x ${note}€ note
+                       `;
   }
   for (let [coin, amount] of Object.entries(getCoinsChange)) {
-    toText += `${amount} of ${coin} cent, `;
+    //minus the coins amount
+    for (let i = 0; i < coins.length; i++) {
+      if (coins[i][1] === Number(coin)) {
+        coins[i][2] -= Number(amount);
+      }
+    }
+
+    //get printout the coins change
+    toText += `  ${amount} x ${coin} cent
+                       `;
   }
-  return toText;
+  //console.log(round, coins);
+  return toText; //Return the change details to the Bill
 }
 
 //Created a function use to execute the change.
