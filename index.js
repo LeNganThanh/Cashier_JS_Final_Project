@@ -21,12 +21,13 @@ class Products {
 
   getReduce(num) {
     //get % reduce for some products
-    this.price = this.price - (this.price / 100) * num;
+    this.price = (this.price - (this.price / 100) * num).toFixed(2);
   }
 }
 //get product to Products list
 const rice = new Products("Rice", 123, 23.75, "23kg Package");
 const noodle = new Products("Instance Noodle", 3657, 13.55, "25 Packs Box");
+const vermicelli = new Products("Glass Noodle", 555, 2.44, "1kg Package");
 rice.getReduce(10); //set the reduce for product
 
 //-----------------------BILL-------------------------//
@@ -61,7 +62,6 @@ class Billing extends Shop {
   //Setting the bill
   makeBill(product, quantity) {
     let total = 0;
-
     //Get the product out of products list to get the price
     let result = this.products.filter(
       item => item.productCode === product.productCode
@@ -79,12 +79,13 @@ class Billing extends Shop {
     let textShoppingItems = "";
     for (let [item, price] of Object.entries(this.bill)) {
       textShoppingItems += `
-        ${item.padEnd(15, " ")}: ${price}€`;
+        ${item.padEnd(15, " ")}: ${price.toString()}€`;
     }
     return textShoppingItems;
   }
   //Setting the bill date
   getDate() {
+    //using month array to printout month in letter.
     let monthArr = [
       "Jan",
       "Feb",
@@ -114,8 +115,8 @@ class Billing extends Shop {
       today.getDate().toString() +
       (today.getMonth() + 1).toString().padStart(2, "0") +
       today.getFullYear().toString() +
-      "00";
-    this.billNumber += 1;
+      "-";
+    this.billNumber += Math.abs(Math.random() * 9999).toFixed(); //Bill number includes today date increase by 1
     return this.billNumber;
   }
   //Working on the Bill
@@ -135,7 +136,7 @@ class Billing extends Shop {
     else if (num === sumOfBill) console.log("You've given right amount.");
     else {
       //Get the total change after receive money from customer
-      let change = num - sumOfBill;
+      let change = (num - sumOfBill).toFixed(2);
 
       //Print out the BILL---------------------
       console.log(`
@@ -147,9 +148,9 @@ class Billing extends Shop {
         --------------------------------------------
 
         Shopping items ${this.shoppingToText()}
-        Total : ${sumOfBill.toString().padStart(13, " ")}€
+        Total : ${sumOfBill.toString().padStart(14, " ")}€
         Your paid : ${num.toString().padStart(8, " ")}€
-        You get back : ${change.toString().padStart(6, " ")}€
+        You get back : ${change.toString().padStart(7, " ")}€
         Your change :  ${cbChange(change, num)}
 
         --------------------------------------------
@@ -162,19 +163,55 @@ class Billing extends Shop {
     }
   }
 }
-const productMan1 = new Billing();
-//adding products to Products list
-productMan1.addProduct(rice);
-productMan1.addProduct(noodle);
+/* Output.
 
-//productMan1.deleteProduct(rice);
-//productMan1.list();
-productMan1.makeBill(rice, 2); //buying product - adding to bill
-productMan1.makeBill(noodle, 1); //buying product - adding to bill
+        ------------------THE BILL------------------
+
+        Bill Nr.   12072022-1
+        Bill Date. 12 - Jul - 2022
+
+        --------------------------------------------
+
+        Shopping items 
+        Rice           : 42.75€
+        Instance Noodle: 13.55€
+        Total :          56.3€
+        Your paid :      100€
+        You get back :   43.7€
+        Your change :    1 x 1€ coin
+                         1 x 2€ coin
+                         2 x 20€ note
+                         1 x 20 cent
+                         1 x 50 cent
+                       
+
+        --------------------------------------------
+
+        Shop :    Asian Corner
+        Address : Hamburger 123, Hamburg
+        Tel :     123456789
+        Email :   asianMarkt@gmail.com
+*/
+
+const bill1 = new Billing();
+//adding products to Products list
+bill1.addProduct(rice);
+bill1.addProduct(noodle);
+bill1.addProduct(vermicelli);
+//bill1.deleteProduct(vermicelli); //delete product out of list
+//bill1.list(); //Show all products
+bill1.makeBill(rice, 2); //buying product - adding to bill
+bill1.makeBill(noodle, 1); //buying product - adding to bill
 
 //getChange function get paid from customer and using callback function to count the change
-productMan1.getChange(100, countChange);
-//console.log(productMan1.getChange("card"));
+bill1.getChange(100, countChange);
+//console.log(bill1.getChange("card"));
+
+// const bill2 = new Billing();
+// bill2.addProduct(vermicelli);
+// //bill2.list();
+// bill2.makeBill(vermicelli, 2);
+// bill2.getChange(20, countChange);
 
 //Setting a callback function to make the Change.
 function countChange(sum, givenSum) {
