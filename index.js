@@ -10,8 +10,8 @@ class Shop {
   }
 }
 
-//Store the products information
-class Products {
+//Store of fresh Products
+class FreshProducts {
   constructor(productName, productCode, price, unit, validDate) {
     this.productCode = productCode;
     this.productName = productName;
@@ -19,17 +19,109 @@ class Products {
     this.unit = unit;
     this.validDate = validDate; //in case of fresh food
   }
+  getReduce(num) {
+    //get % reduce for some products
+    this.price = (this.price - (this.price / 100) * num).toFixed(2);
+  }
+}
+//setting some fresh products to shop
+const fish = new FreshProducts(
+  "Salmon",
+  9876,
+  3.45,
+  "1kg Salmon fish",
+  "20/07/2022"
+);
+const beef = new FreshProducts(
+  "Beef steak",
+  7896,
+  6.54,
+  "500g Beef Fillet",
+  "15/07/2022"
+);
+const pork = new FreshProducts(
+  "Pork",
+  4573,
+  4,
+  56,
+  "350g Package",
+  "17/07/2022"
+);
+
+//Store of drinking Products
+class DrinkProducts {
+  constructor(productName, productCode, price, unit) {
+    this.productCode = productCode;
+    this.productName = productName;
+    this.price = price;
+    this.unit = unit;
+  }
+  getReduce(num) {
+    //get % reduce for some products
+    this.price = (this.price - (this.price / 100) * num).toFixed(2);
+  }
+}
+
+//-------------Products------------------
+//getting drinking stuff for shop
+const coca = new DrinkProducts("Coca Cola", 2549, 1.21, "1.5l Bottle");
+const fanta = new DrinkProducts("Fanta", 2550, 1.21, "1.5l Bottle");
+const sprite = new DrinkProducts("Sprite", 2548, 1.21, "1.5l Bottle");
+
+//Store of Dry products
+class DryProducts {
+  constructor(productName, productCode, price, unit) {
+    this.productCode = productCode;
+    this.productName = productName;
+    this.price = price;
+    this.unit = unit;
+  }
 
   getReduce(num) {
     //get % reduce for some products
     this.price = (this.price - (this.price / 100) * num).toFixed(2);
   }
 }
-//get product to Products list
-const rice = new Products("Rice", 123, 23.75, "23kg Package");
-const noodle = new Products("Instance Noodle", 3657, 13.55, "25 Packs Box");
-const vermicelli = new Products("Glass Noodle", 555, 2.45, "1kg Package");
+//get product to DryProducts list
+const rice = new DryProducts("Rice", 123, 23.75, "23kg Package");
+const noodle = new DryProducts("Instance Noodle", 3657, 13.55, "25 Packs Box");
+const vermicelli = new DryProducts("Glass Noodle", 555, 2.45, "1kg Package");
 rice.getReduce(10); //set the reduce for product
+
+//Store of all products
+class ShopProducts {
+  constructor() {
+    this.products = []; //array to store all products in shop
+  }
+  addProducts(...product) {
+    //adding products to products array
+    this.products.push(...product);
+  }
+  deleteProduct(product) {
+    //find the index of product and using splice to get out of products list
+    const idx = this.products.findIndex(
+      item => item.productCode === product.productCode
+    );
+    this.products.splice(idx, 1);
+  }
+  listProducts() {
+    //list all products in shop.
+    console.log(this.products);
+  }
+}
+const shopProduct = new ShopProducts();
+//adding all products to one list
+shopProduct.addProducts(rice);
+shopProduct.addProducts(noodle);
+shopProduct.addProducts(vermicelli);
+shopProduct.addProducts(coca);
+shopProduct.addProducts(fanta);
+shopProduct.addProducts(sprite);
+shopProduct.addProducts(fish);
+shopProduct.addProducts(beef);
+shopProduct.addProducts(pork);
+//shopProduct.deleteProduct(vermicelli);
+shopProduct.listProducts();
 
 //-----------------------BILL-------------------------//
 
@@ -136,6 +228,7 @@ class Billing extends Shop {
       today.getMinutes().toString().padStart(2, "0");
     return this.billNumber;
   }
+
   //Execute the change------------------------------------
   //To complete the bill - we need the Change to give back the rest amount of payment to customer.
   //getChange method get the "num" is the total cash from customer
