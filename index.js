@@ -17,7 +17,7 @@ class Products {
     this.productName = productName;
     this.price = price;
     this.unit = unit;
-    this.validDate = validDate;
+    this.validDate = validDate; //in case of fresh food
   }
 
   getReduce(num) {
@@ -78,8 +78,9 @@ class Billing extends Shop {
     //setting the bill object with information of products and total payment
     this.bill[product.productName] = total;
   }
-  //Text the shopping list
-  //setting the print out to show on the bill
+
+  //Text to printout---------------------------------
+  //setting the Text to print out on the bill
   //Getting products name and amount from bill object
   shoppingToText() {
     let textShoppingItems = "";
@@ -96,7 +97,7 @@ class Billing extends Shop {
   }
   //Setting the bill date
   getDate() {
-    //using month array to printout month in letter.
+    //using month array to printout month in word.
     let monthArr = [
       "Jan",
       "Feb",
@@ -117,7 +118,7 @@ class Billing extends Shop {
       .getDate()
       .toString()
       .padStart(2, "0")} - ${monthArr[todayMonth]} - ${today.getFullYear()}`);
-    //using padStart in the case of 1 digit then it should show 2 digits with 0 in front of.
+    //using padStart in the case of 1 digit then it should show 2 digits with 0 in front.
   }
 
   //Setting the bill number
@@ -125,6 +126,7 @@ class Billing extends Shop {
     let today = new Date(); //Get today Date for the bill number
 
     //Bill number includes today date + hour and minute.
+    //using padStart in the case of 1 digit then it should show 2 digits with 0 in front.
     this.billNumber =
       today.getDate().toString() +
       (today.getMonth() + 1).toString().padStart(2, "0") +
@@ -134,7 +136,7 @@ class Billing extends Shop {
       today.getMinutes().toString().padStart(2, "0");
     return this.billNumber;
   }
-  //Working on the Bill------------------------------------
+  //Execute the change------------------------------------
   //To complete the bill - we need the Change to give back the rest amount of payment to customer.
   //getChange method get the "num" is the total cash from customer
   //cbChange is a callback function to execute the change  - it is called in the BILL printout
@@ -218,13 +220,16 @@ class Billing extends Shop {
         Email :   asianMarkt@gmail.com
 */
 
-//---------------------------------------------//
+//------------------Get shopping---------------------------//
+
 //Setting the first bill
 const bill1 = new Billing();
+
 //adding products to shopping list
 bill1.addProductToCart(rice);
 bill1.addProductToCart(noodle);
 bill1.addProductToCart(vermicelli);
+
 //bill1.deleteProduct(vermicelli); //delete product out of list
 //bill1.listProductToBuy(); //Show all products
 
@@ -244,7 +249,8 @@ bill1.getChange(100, countChange);
 // bill2.makeBill(vermicelli, 2);
 // bill2.getChange(20, countChange);
 
-//----------A Callback function-------------------//
+//-----------A Callback function-------------------//
+
 //Setting a callback function to execute the Change.
 //sum is the total bill
 //givenSum is the money given by customer
@@ -307,6 +313,8 @@ function countChange(sum, givenSum) {
   let toText = ""; //Get details of the change to get printout on the Bill
 
   //get array of full Euro values to give back the change
+  //If some note has amount of 0 then get out of array
+  //Ex. the change is 80€ = 50€ + 20€ + 10€ - if the Cashier has no 50€ note then the array has no 50 value -->> 4 x 20€
   if (roundSum > 0) {
     let roundCopyArr = round; //Get a copy to splice in case of no values notes
     //loop through to check if any cash is 0
@@ -344,6 +352,8 @@ function countChange(sum, givenSum) {
   else if (roundSum === 0) roundChange = roundSum;
 
   //array of all coins of cents values to give back the change
+  //if some kind of coins is missing then get delete out of array to use for execute amountToChange().
+  //Ex. 30ct = 20ct + 10ct if 20ct is missing -->> 3 x 10ct
   if (cents > 0) {
     let coinsCopyArr = coins; //Get a copy to splice in case of no values coins
     //loop to check if it is enough coins
@@ -364,6 +374,7 @@ function countChange(sum, givenSum) {
         });
       }
     }
+
     //calling amountToChange() to check how many kind of coin and amount of coin has to give back to customer and add it to array of coins
     //coinsArr get all the value of coins to provide an array to check in amountToChange()
 
@@ -390,7 +401,7 @@ function countChange(sum, givenSum) {
         round[i][2] -= Number(amount);
       }
     }
-    //Printout----------
+    //Text to printout------------------
     //setting the Text to printout the note change (1€ and 2€ are only coins) on the Bill
     if (note === "1" || note === "2")
       toText += `    ${amount} x ${note}€ coin
@@ -410,7 +421,7 @@ function countChange(sum, givenSum) {
       }
     }
 
-    //Printout------------
+    //Text to printout--------------------
     //get printout the coins of change on the Bill
     toText += `    ${amount} x ${coin} cent
                        `;
@@ -420,7 +431,7 @@ function countChange(sum, givenSum) {
 }
 
 //------------------RECURSION-----------------
-//Created a function use to execute the change.
+//A function use to execute the change.
 //amountToChange get "num" as total amount and using array to check that how many kind of value should be.
 function amountToChange(num, arr) {
   let temp = 0;
