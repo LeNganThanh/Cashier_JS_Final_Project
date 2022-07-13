@@ -27,7 +27,7 @@ class Products {
 //get product to Products list
 const rice = new Products("Rice", 123, 23.75, "23kg Package");
 const noodle = new Products("Instance Noodle", 3657, 13.55, "25 Packs Box");
-const vermicelli = new Products("Glass Noodle", 555, 2.44, "1kg Package");
+const vermicelli = new Products("Glass Noodle", 555, 2.45, "1kg Package");
 rice.getReduce(10); //set the reduce for product
 
 //-----------------------BILL-------------------------//
@@ -42,7 +42,7 @@ class Billing extends Shop {
     this.billNumber = "";
   }
   //Adding product
-  addProduct(...products) {
+  addProductToCart(...products) {
     this.products.push(...products);
   }
 
@@ -54,8 +54,8 @@ class Billing extends Shop {
     this.products.splice(idx, 1);
   }
 
-  //List all the products in Shop
-  list() {
+  //List all the products in Cart
+  listProductToBuy() {
     console.log(this.products);
   }
 
@@ -198,11 +198,11 @@ class Billing extends Shop {
 
 const bill1 = new Billing();
 //adding products to Products list
-bill1.addProduct(rice);
-bill1.addProduct(noodle);
-bill1.addProduct(vermicelli);
+bill1.addProductToCart(rice);
+bill1.addProductToCart(noodle);
+bill1.addProductToCart(vermicelli);
 //bill1.deleteProduct(vermicelli); //delete product out of list
-//bill1.list(); //Show all products
+//bill1.listProductToBuy(); //Show all products
 bill1.makeBill(rice, 2); //buying product - adding to bill
 bill1.makeBill(noodle, 1); //buying product - adding to bill
 
@@ -211,8 +211,8 @@ bill1.getChange(100, countChange);
 //console.log(bill1.getChange("card"));
 
 // const bill2 = new Billing();
-// bill2.addProduct(vermicelli);
-// //bill2.list();
+// bill2.addProductToCart(vermicelli);
+// //bill2.listProductToBuy();
 // bill2.makeBill(vermicelli, 2);
 // bill2.getChange(20, countChange);
 
