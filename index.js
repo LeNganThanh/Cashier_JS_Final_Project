@@ -116,7 +116,10 @@ class Billing extends Shop {
       (today.getMonth() + 1).toString().padStart(2, "0") +
       today.getFullYear().toString() +
       "-";
-    this.billNumber += Math.abs(Math.random() * 9999).toFixed(); //Bill number includes today date increase by 1
+    //Bill number includes today date + hour and minute.
+    this.billNumber +=
+      today.getHours().toString().padStart(2, "0") +
+      today.getMinutes().toString().padStart(2, "0");
     return this.billNumber;
   }
   //Working on the Bill
@@ -217,13 +220,13 @@ bill1.getChange(100, countChange);
 function countChange(sum, givenSum) {
   const round = [
     //array of full Euro notes and coins
-    ["oneHundredNote", 100, 20],
-    ["fiftyNote", 50, 100],
+    ["oneHundredNote", 100, 0],
+    ["fiftyNote", 50, 50],
     ["twentyNote", 20, 100],
     ["tenNote", 10, 100],
     ["fiveNote", 5, 100],
-    ["twoEuroCoin", 2, 100],
-    ["oneEuroCoin", 1, 100],
+    ["twoEuroCoin", 2, 200],
+    ["oneEuroCoin", 1, 200],
   ];
   const coins = [
     //array of all Euro cents
@@ -272,11 +275,19 @@ function countChange(sum, givenSum) {
       if (round[i][2] === 0) {
         let idxOfNoCash = 0;
         round.forEach(val => {
-          if (val[2] === 0) idxOfNoCash = round.indexOf(val);
+          if (val[2] === 0) {
+            idxOfNoCash = round.indexOf(val);
+            //if all the round currency not 1€ coin has 0 value then splice out of array
+            if (idxOfNoCash !== round.length - 1)
+              roundCopyArr.splice(idxOfNoCash, 1);
+            //keeping 1€ always in the list even has 0 value
+            else if (idxOfNoCash === round.length - 1)
+              roundCopyArr.splice(idxOfNoCash, 0);
+          }
         });
-        roundCopyArr.splice(idxOfNoCash, 1); //splice value 0 out of array
       }
     }
+    ///
     const roundArr = roundCopyArr.reduce((arr, cur) => arr.concat(cur[1]), []);
     roundChange = amountToChange(roundSum, roundArr);
     roundChange.forEach(
@@ -292,11 +303,21 @@ function countChange(sum, givenSum) {
       if (coins[i][2] === 0) {
         let idxOfNoCoin = 0;
         coins.forEach(val => {
-          if (val[2] === 0) idxOfNoCoin = coins.indexOf(val);
+          if (val[2] === 0) {
+            idxOfNoCoin = coins.indexOf(val);
+
+            //if all the cent not 1 cent has 0 value then splice out of array
+            if (idxOfNoCoin !== coins.length - 1)
+              coinsCopyArr.splice(idxOfNoCoin, 1);
+            //keeping 1cent coins always in the list even has 0 value
+            else if (idxOfNoCoin === coins.length - 1)
+              coinsCopyArr.splice(idxOfNoCoin, 0);
+          }
         });
-        coinsCopyArr.splice(idxOfNoCoin, 1); //if any coins value is 0 then delete out of array
       }
     }
+    ///
+
     const coinsArr = coinsCopyArr.reduce((arr, cur) => arr.concat(cur[1]), []);
     coinsChange = amountToChange(cents, coinsArr);
     coinsChange.forEach(
