@@ -79,7 +79,10 @@ class Billing extends Shop {
     let textShoppingItems = "";
     for (let [item, price] of Object.entries(this.bill)) {
       textShoppingItems += `
-        ${item.padEnd(15, " ")}: ${price.toString()}€`;
+        ${item.padEnd(15, " ")}: ${parseFloat(price)
+        .toFixed(2)
+        .toString()
+        .padStart(7, " ")}€`;
     }
     return textShoppingItems;
   }
@@ -139,7 +142,7 @@ class Billing extends Shop {
     else if (num === sumOfBill) console.log("You've given right amount.");
     else {
       //Get the total change after receive money from customer
-      let change = (num - sumOfBill).toFixed(2);
+      let change = parseFloat(num - sumOfBill).toFixed(2);
 
       //Print out the BILL---------------------
       console.log(`
@@ -151,9 +154,12 @@ class Billing extends Shop {
         --------------------------------------------
 
         Shopping items ${this.shoppingToText()}
-        Total : ${sumOfBill.toString().padStart(14, " ")}€
-        Your paid : ${num.toString().padStart(8, " ")}€
-        You get back : ${change.toString().padStart(7, " ")}€
+        Total : ${parseFloat(sumOfBill)
+          .toFixed(2)
+          .toString()
+          .padStart(16, " ")}€
+        Your paid : ${num.toString().padStart(10, " ")}€
+        You get back : ${change.toString().padStart(9, " ")}€
         Your change :  ${cbChange(change, num)}
 
         --------------------------------------------
@@ -254,7 +260,7 @@ function countChange(sum, givenSum) {
   //console.log(round);
 
   //get the cents out of amount of bill
-  const cents = Number((sum - Math.floor(sum)).toFixed(2) * 100);
+  const cents = Number((sum - Math.floor(sum)) * 100).toFixed(2);
 
   //get the round sum of amount of bill
   const roundSum = Math.floor(sum);
@@ -336,10 +342,10 @@ function countChange(sum, givenSum) {
 
     //get printout the note change (1€ and 2€ are only coins)
     if (note === "1" || note === "2")
-      toText += `  ${amount} x ${note}€ coin
+      toText += `    ${amount} x ${note}€ coin
                        `;
     else
-      toText += `  ${amount} x ${note}€ note
+      toText += `    ${amount} x ${note}€ note
                        `;
   }
   for (let [coin, amount] of Object.entries(getCoinsChange)) {
@@ -351,7 +357,7 @@ function countChange(sum, givenSum) {
     }
 
     //get printout the coins change
-    toText += `  ${amount} x ${coin} cent
+    toText += `    ${amount} x ${coin} cent
                        `;
   }
   //console.log(round, coins);
