@@ -1,5 +1,6 @@
 "use strict";
 /**
+ *
  * Create a virtual shop.
  *
  * @param {string} shopName - the name of shop
@@ -21,11 +22,11 @@ class Shop {
  *
  *-------------------------Products-----------------------------
  *
- *  this.productCode - the code of product
- *  this.productName - the name of product (full details name)
- *  this.price - the price of product (update the new price after reducing)
- *  this.unit - the details description of product with measurement (kg, l ....)
- *  this.validDate - the valid date of product
+ * @param {string} productName - the name of product (full details name)
+ * @param {string} productCode - the code of product
+ * @param {number} price - the price of product (update the new price after reducing)
+ * @param {string} unit - the details description of product with measurement (kg, l ....)
+ * @param {string} validDate - the valid date of product (dd/mm/yyyy)
  *
  */
 
@@ -121,11 +122,11 @@ rice.getReduce(10);
  * Store of all products---------
  * in store we can add all sort of products and delete some - can list all products in shop and search products.
  *
- * this.products - array to store all products in shop
- * this.veganProducts - array to store all vegan products
- * this.drinkProducts - array to store all drinking products
- * this.freshProducts - array to store all fresh products
- * this.dryProducts - array to store all dry products
+ * @param {array.object} products - store all products in shop
+ * @param {array.object} veganProducts - store all vegan products
+ * @param {array.object} drinkProducts - store all drinking products
+ * @param {array.object} freshProducts - store all fresh products
+ * @param {array.object} dryProducts - store all dry products
  *
  */
 //
@@ -764,9 +765,9 @@ function countChange(sum, givenSum) {
     (a, b) => b[0] - a[0]
   );
   for (let [note, amount] of sortNoteChange) {
-    if (note === 1 || note === 2)
+    if (note === "1" || note === "2")
       toText += `    ${amount} x ${note}€ coin
-    `;
+                       `;
     else
       toText += `    ${amount} x ${note}€ note
                        `;
