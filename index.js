@@ -169,7 +169,51 @@ class ShopProducts {
       item => item.productCode === product.productCode
     );
     this.products.splice(idx, 1);
+
+    /**
+     * delDryProductIdx - find the index of product in specific sort of product to splice out
+     */
+    let delDryProductIdx = 0;
+    this.dryProducts.map(item => {
+      if (item.productCode === product.productCode)
+        return (delDryProductIdx = this.dryProducts.indexOf(item));
+    });
+    if (delDryProductIdx !== 0) this.dryProducts.splice(delDryProductIdx, 1);
+
+    /**
+     * delFreshProductIdx - find the index of product in specific sort of product to splice out
+     */
+    let delFreshProductIdx = 0;
+    this.dryProducts.map(item => {
+      if (item.productCode === product.productCode)
+        return (delFreshProductIdx = this.dryProducts.indexOf(item));
+    });
+    if (delFreshProductIdx !== 0)
+      this.dryProducts.splice(delFreshProductIdx, 1);
+
+    /**
+     * delVeganProductIdx - find the index of product in specific sort of product to splice out
+     */
+    let delVeganProductIdx = 0;
+    this.dryProducts.map(item => {
+      if (item.productCode === product.productCode)
+        return (delVeganProductIdx = this.dryProducts.indexOf(item));
+    });
+    if (delVeganProductIdx !== 0)
+      this.dryProducts.splice(delVeganProductIdx, 1);
+
+    /**
+     * delDrinkProductIdx - find the index of product in specific sort of product to splice out
+     */
+    let delDrinkProductIdx = 0;
+    this.dryProducts.map(item => {
+      if (item.productCode === product.productCode)
+        return (delDrinkProductIdx = this.dryProducts.indexOf(item));
+    });
+    if (delDrinkProductIdx !== 0)
+      this.dryProducts.splice(delDrinkProductIdx, 1);
   }
+
   /**
    * list all products in shop.
    * list kinds of products
