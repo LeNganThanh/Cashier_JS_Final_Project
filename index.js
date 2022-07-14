@@ -20,7 +20,12 @@ class Shop {
 /**
  *
  *-------------------------Products-----------------------------
- * All products with the name - code - price - unit detail and valid date .
+ *
+ *  this.productCode - the code of product
+ *  this.productName - the name of product (full details name)
+ *  this.price - the price of product (update the new price after reducing)
+ *  this.unit - the details description of product with measurement (kg, l ....)
+ *  this.validDate - the valid date of product
  *
  */
 
@@ -221,6 +226,8 @@ shopProducts.addVeganProduct(vegaFish);
 //shopProducts.listFreshProducts();
 //shopProducts.searchProducts(rice);
 
+/////////////////////////////////////////////////////////
+
 /**
  * -----------------------BILL------------------------
  * Bill gets extend from Shop to get all shop information and get printout on the Bill.
@@ -298,8 +305,8 @@ class Billing extends Shop {
     this.bill[product.productName] = total;
   }
 
-  //Text to printout---------------------------------
   /**
+   * Text to printout---------------------------------
    *
    * @returns {string} - Text to printout on the Bill
    * getting products name and amount from bill object
@@ -318,11 +325,10 @@ class Billing extends Shop {
     }
     return textShoppingItems;
   }
-  //Setting the bill date
   /**
+   * setting the bill date
    *
    * @returns {string} - a string of date dd/mm/yyyy
-   *
    * monthArr - use to printout month in word.
    * today - getting today Date
    * todayMonth - get number of month to convert to text by using monthArr
@@ -356,9 +362,8 @@ class Billing extends Shop {
 
   /**
    *setting the bill number
-
-   * @returns {string} -  //Bill number includes today date + hour + minute.
    *
+   * @returns {string} -  //Bill number includes today date + hour + minute.
    * today - get today Date for the bill number
    * using padStart in the case of 1 digit then it should show 2 digits with 0 in front.
    *
@@ -378,8 +383,8 @@ class Billing extends Shop {
 
   /**
    *
-   * Execute the change------------------------------------
-   * To complete the bill - we need the Change to give back the rest amount of payment to customer.
+   * setting up the bill printout --------------------------
+   * to complete the bill - we need the Change to give back the rest amount of payment to customer.
    *
    * @param {number} num - the total cash from customer
    * @param {function} cbChange - a callback  to execute the change  - it is called in the BILL printout
@@ -518,7 +523,7 @@ bill1.getChange(100, countChange);
 // bill2.makeBill(vegaBeef, 1);
 // bill2.getChange(20, countChange);
 
-/////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
 
 /**
  * -----------A Callback function-------------------
@@ -702,53 +707,54 @@ function countChange(sum, givenSum) {
 
   /**
    *
+   * Text to printout--------------------
+   * get printout the currency note of change on the Bill
    * decrement the amount of note after give back the change
    * getRoundChange object will give the amount of note has to give back
    *
+   * noteOfChangeKeys - get the value of note to make a loop
+   * noteOfChangeValues - get the amount of note from getRoundChange Object
+   *
+   * loop thought from big value note to small value note
+   *
+   * if the value is 1€ or 2€ that will be "coin"
+   *
    */
-  for (let [note, amount] of Object.entries(getRoundChange)) {
-    for (let i = 0; i < round.length; i++) {
-      if (round[i][1] === Number(note)) {
-        round[i][2] -= Number(amount); //minus the note amount
-      }
-    }
 
-    /**
-     *
-     * Text to printout------------------
-     * setting the Text to printout the note change (1€ and 2€ are only coins) on the Bill
-     *
-     */
-    if (note === "1" || note === "2")
-      toText += `    ${amount} x ${note}€ coin
+  const noteOfChangeKeys = Object.keys(getRoundChange);
+  const noteOfChangeValues = Object.values(getRoundChange);
+
+  for (let i = noteOfChangeKeys.length - 1; i >= 0; i--) {
+    if (noteOfChangeKeys[i] === "1" || noteOfChangeKeys[i] === "2")
+      toText += `    ${noteOfChangeValues[i]} x ${noteOfChangeKeys[i]}€ coin
                        `;
     else
-      toText += `    ${amount} x ${note}€ note
+      toText += `    ${noteOfChangeValues[i]} x ${noteOfChangeKeys[i]}€ note
                        `;
   }
 
   /**
    *
+   * Text to printout--------------------
+   * get printout the coins of change on the Bill
+   *
    * decrement the amount of coins after give back
    * getCoinsChange object will give the amount of coins has to give back
    *
+   * coinOfChangeKeys - get the value of note to make a loop
+   * coinOfChangeValues - get the amount of note from getCoinsChange Object
+   *
+   * loop thought from big value coin to small value coin
    */
-  for (let [coin, amount] of Object.entries(getCoinsChange)) {
-    for (let i = 0; i < coins.length; i++) {
-      if (coins[i][1] === Number(coin)) {
-        coins[i][2] -= Number(amount); //minus the coins amount
-      }
-    }
 
-    /**
-     *
-     * Text to printout--------------------
-     * get printout the coins of change on the Bill
-     *
-     */
-    toText += `    ${amount} x ${coin} cent
+  const coinOfChangeKeys = Object.keys(getCoinsChange);
+  const coinOfChangeValues = Object.values(getCoinsChange);
+
+  for (let i = coinOfChangeKeys.length - 1; i >= 0; i--) {
+    toText += `    ${coinOfChangeValues[i]} x ${coinOfChangeKeys[i]} cent
                        `;
   }
+
   /**
    * @returns(string) - Return the change details Text to the Bill
    */
