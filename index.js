@@ -16,22 +16,15 @@ class Shop {
     this.tel = 123456789;
   }
 }
-/* 
-//-------------------------Products-----------------------------//
-All products are sorted by kind of products with the name - code - price - unit detail and valid date for fresh food.
-*/
 
 /**
- * Store of Vegan Products
  *
- * @param {number} productCode - the code of product
- * @param {string} productName - the name of product
- * @param {number} price - the price of product (also new price after reducing)
- * @param {string} unit - the detail of product in kg - package .....
- * @param {string} validDate - dd/mm/yyyy - in case of fresh food
+ *-------------------------Products-----------------------------
+ * All products with the name - code - price - unit detail and valid date .
  *
  */
-class Vegan {
+
+class Products {
   constructor(productName, productCode, price, unit, validDate) {
     this.productCode = productCode;
     this.productName = productName;
@@ -49,147 +42,69 @@ class Vegan {
     this.price = (this.price - (this.price / 100) * num).toFixed(2);
   }
 }
-const tofu = new Vegan("Tofu", 7123, 1.89, "500g Package", "20/08/2022");
-const vegaBeef = new Vegan(
+/**
+ * setting Products
+ */
+const rice = new Products("Rice", 123, 23.75, "23kg Package", "20/07/2023");
+const noodle = new Products(
+  "Instance Noodle",
+  3657,
+  13.55,
+  "25 Packs Box",
+  "30/01/2024"
+);
+const vermicelli = new Products(
+  "Glass Noodle",
+  555,
+  2.45,
+  "1kg Package",
+  "12/12/2023"
+);
+const coconut = new Products("Coconut", 2549, 1.75, "1l Bottle", "25/12/2023");
+const pomelo = new Products(
+  "Pomelo Juice",
+  2550,
+  1.53,
+  "750ml Bottle",
+  "01/01/2024"
+);
+const pineapple = new Products(
+  "Pineapple Juice",
+  2548,
+  1.21,
+  "500ml Bottle",
+  "15/07/2024"
+);
+const tofu = new Products("Tofu", 7123, 1.89, "500g Package", "20/08/2022");
+const vegaBeef = new Products(
   "Vegan Beef",
   7564,
   5.67,
   "500g Package",
   "30/07/2022"
 );
-const vegaFish = new Vegan(
+const vegaFish = new Products(
   "Vegan Fish Ball",
   7566,
-  3,
-  45,
+  3.45,
   "750g Package",
   "15/09/2022"
 );
-
-/**
- * Store of fresh Products
- *
- * @param {number} productCode - the code of product
- * @param {string} productName - the name of product
- * @param {number} price - the price of product (also new price after reducing)
- * @param {string} unit - the detail of product in kg - package .....
- * @param {string} validDate - dd/mm/yyyy - in case of fresh food
- *
- */
-class FreshProducts {
-  constructor(productName, productCode, price, unit, validDate) {
-    this.productCode = productCode;
-    this.productName = productName;
-    this.price = price;
-    this.unit = unit;
-    this.validDate = validDate;
-  }
-  /**
-   *
-   * @param {num} num - % reduce for some products
-   * @returns - the new price after reducing
-   *
-   */
-  getReduce(num) {
-    this.price = (this.price - (this.price / 100) * num).toFixed(2);
-  }
-}
-/**
- * setting fresh products to shop
- */
-const fish = new FreshProducts(
-  "Basa",
-  9876,
-  3.45,
-  "1kg Basa fish",
-  "20/07/2022"
-);
-const chicken = new FreshProducts(
+const fish = new Products("Basa", 9876, 3.45, "1kg Basa fish", "20/07/2022");
+const chicken = new Products(
   "A chicken",
   7896,
   9.55,
   "1kg chicken",
   "15/07/2022"
 );
-const pork = new FreshProducts(
+const pork = new Products(
   "Pork Leg",
   4573,
   8.55,
   "1.5kg Package",
   "17/07/2022"
 );
-
-/**
- * Store of drinking Products
- *
- * @param {number} productCode - the code of product
- * @param {string} productName - the name of product
- * @param {number} price - the price of product (also new price after reducing)
- * @param {string} unit - the detail of product in kg - package .....
- *
- */
-class DrinkProducts {
-  constructor(productName, productCode, price, unit) {
-    this.productCode = productCode;
-    this.productName = productName;
-    this.price = price;
-    this.unit = unit;
-  }
-  getReduce(num) {
-    /**
-     *
-     * @param {num} num - % reduce for some products
-     * @returns - the new price after reducing
-     *
-     */
-    this.price = (this.price - (this.price / 100) * num).toFixed(2);
-  }
-}
-/**
- * getting drinking stuff for shop
- */
-const coconut = new DrinkProducts("Coconut", 2549, 1.75, "1l Bottle");
-const pomelo = new DrinkProducts("Pomelo Juice", 2550, 1.53, "750ml Bottle");
-const pineapple = new DrinkProducts(
-  "Pineapple Juice",
-  2548,
-  1.21,
-  "500ml Bottle"
-);
-
-/**
- * Store of Dry products
- *
- * @param {number} productCode - the code of product
- * @param {string} productName - the name of product
- * @param {number} price - the price of product (also new price after reducing)
- * @param {string} unit - the detail of product in kg - package .....
- *
- */
-
-class DryProducts {
-  constructor(productName, productCode, price, unit) {
-    this.productCode = productCode;
-    this.productName = productName;
-    this.price = price;
-    this.unit = unit;
-  }
-  /**
-   *
-   * @param {num} num - % reduce for some products
-   * @returns - the new price after reducing
-   *
-   */
-  getReduce(num) {
-    this.price = (this.price - (this.price / 100) * num).toFixed(2);
-  }
-}
-/**
- * get product to DryProducts list
- */
-const rice = new DryProducts("Rice", 123, 23.75, "23kg Package");
-const noodle = new DryProducts("Instance Noodle", 3657, 13.55, "25 Packs Box");
-const vermicelli = new DryProducts("Glass Noodle", 555, 2.45, "1kg Package");
 
 /**
  * reducing price
@@ -202,21 +117,43 @@ rice.getReduce(10);
  * in store we can add all sort of products and delete some - can list all products in shop and search products.
  *
  * this.products - array to store all products in shop
+ * this.veganProducts - array to store all vegan products
+ * this.drinkProducts - array to store all drinking products
+ * this.freshProducts - array to store all fresh products
+ * this.dryProducts - array to store all dry products
  *
  */
 //
 class ShopProducts {
   constructor() {
     this.products = [];
+    this.veganProducts = [];
+    this.drinkProducts = [];
+    this.freshProducts = [];
+    this.dryProducts = [];
   }
   /**
    *
-   * @param  {object} product  - adding product to products array
+   * @param  {object} product  - adding product to products array and kinds of products array
    *
    */
-  addProducts(...product) {
+  addDryProduct(...product) {
     this.products.push(...product);
+    this.dryProducts.push(...product);
   }
+  addVeganProduct(...product) {
+    this.products.push(...product);
+    this.veganProducts.push(...product);
+  }
+  addDrinkProduct(...product) {
+    this.products.push(...product);
+    this.drinkProducts.push(...product);
+  }
+  addFreshProduct(...product) {
+    this.products.push(...product);
+    this.freshProducts.push(...product);
+  }
+
   /**
    *
    * @param {object} product - find the index of product and using splice to get out of products list
@@ -230,9 +167,22 @@ class ShopProducts {
   }
   /**
    * list all products in shop.
+   * list kinds of products
    */
   listProducts() {
     console.log(this.products);
+  }
+  listVeganProducts() {
+    console.log(this.veganProducts);
+  }
+  listDrinkProducts() {
+    console.log(this.drinkProducts);
+  }
+  listFreshProducts() {
+    console.log(this.freshProducts);
+  }
+  listDryProducts() {
+    console.log(this.dryProducts);
   }
   /**
    * search for a specific product
@@ -249,22 +199,26 @@ class ShopProducts {
 
 const shopProducts = new ShopProducts();
 /**
- * adding all products to one list
+ * adding all products to shop products list
  */
-shopProducts.addProducts(rice);
-shopProducts.addProducts(noodle);
-shopProducts.addProducts(vermicelli);
-shopProducts.addProducts(coconut);
-shopProducts.addProducts(pomelo);
-shopProducts.addProducts(pineapple);
-shopProducts.addProducts(fish);
-shopProducts.addProducts(chicken);
-shopProducts.addProducts(pork);
-shopProducts.addProducts(tofu);
-shopProducts.addProducts(vegaBeef);
-shopProducts.addProducts(vegaFish);
+shopProducts.addDryProduct(rice);
+shopProducts.addDryProduct(noodle);
+shopProducts.addDryProduct(vermicelli);
+shopProducts.addDrinkProduct(coconut);
+shopProducts.addDrinkProduct(pomelo);
+shopProducts.addDrinkProduct(pineapple);
+shopProducts.addFreshProduct(fish);
+shopProducts.addFreshProduct(chicken);
+shopProducts.addFreshProduct(pork);
+shopProducts.addVeganProduct(tofu);
+shopProducts.addVeganProduct(vegaBeef);
+shopProducts.addVeganProduct(vegaFish);
 //shopProducts.deleteProduct(vermicelli);
 //shopProducts.listProducts();
+//shopProducts.listVeganProducts();
+//shopProducts.listDrinkProducts();
+//shopProducts.listDryProducts();
+//shopProducts.listFreshProducts();
 //shopProducts.searchProducts(rice);
 
 /**
