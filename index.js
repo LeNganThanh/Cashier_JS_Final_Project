@@ -593,21 +593,21 @@ function countChange(sum, givenSum) {
     ["fiftyNote", 50, 50],
     ["twentyNote", 20, 200],
     ["tenNote", 10, 200],
-    ["fiveNote", 5, 100],
-    ["twoEuroCoin", 2, 200],
-    ["oneEuroCoin", 1, 200],
+    ["fiveNote", 5, 300],
+    ["twoEuroCoin", 2, 300],
+    ["oneEuroCoin", 1, 300],
   ];
 
   const coins = [
     ["fiftyCoin", 50, 200],
     ["twentyCoin", 20, 200],
-    ["tenCoin", 10, 200],
-    ["fiveCentCoin", 5, 200],
-    ["twoCentCoin", 2, 500],
-    ["oneCentCoin", 1, 0],
+    ["tenCoin", 10, 300],
+    ["fiveCentCoin", 5, 300],
+    ["twoCentCoin", 2, 300],
+    ["oneCentCoin", 1, 300],
   ];
   let giveNote = {};
-
+  console.log(coins);
   /**
    *
    * calling amountToChange() to check how many kind of currency note and amount of note given by customer and add it to array of currency
@@ -657,31 +657,20 @@ function countChange(sum, givenSum) {
    * if some note has amount of 0 then get out of array
    * Ex. the change is 80€ = 50€ + 20€ + 10€ - if the Cashier has no 50€ note then the array has no 50 value -->> 4 x 20€
    *
-   * roundCopyArr - a copy of round currency array to splice in case of no values notes
+   * roundArr - an array of available cash
+   * using loop to check if it is enough cash and push to roundArr
+   * in case 1€ is 0 - the array still has that value
    *
    */
   if (roundSum > 0) {
-    let roundCopyArr = round;
-    /**
-     * loop thought to check if it is enough coins
-     */
+    let roundArr = [];
+
     for (let i = 0; i < round.length; i++) {
-      if (round[i][2] === 0) {
-        let idxOfNoCash = 0; //get index of the currency has the amount of 0 at Cashier
-        round.forEach(val => {
-          if (val[2] === 0) {
-            idxOfNoCash = round.indexOf(val);
-          }
-          /**
-           * if all the round currency except 1€ coin has 0 amount then splice out of array
-           */
-          if (idxOfNoCash !== round.length - 1)
-            roundCopyArr.splice(idxOfNoCash, 1);
-          else if (idxOfNoCash === round.length - 1)
-            roundCopyArr.splice(idxOfNoCash, 0);
-        });
+      if (round[i][2] !== 0) {
+        roundArr.push(round[i][1]);
       }
     }
+    if (round.at(-1)[2] === 0) roundArr.push(round.at(-1)[1]);
 
     /**
      *
@@ -692,7 +681,7 @@ function countChange(sum, givenSum) {
      * in case has not to give back any note then the amount of round currency is 0
      *
      */
-    const roundArr = roundCopyArr.reduce((arr, cur) => arr.concat(cur[1]), []);
+
     roundChange = amountToChange(roundSum, roundArr);
     roundChange.forEach(
       val => (getRoundChange[val] = (getRoundChange[val] || 0) + 1)
@@ -705,31 +694,22 @@ function countChange(sum, givenSum) {
    * if some kind of coins is missing then get delete out of array to use to execute amountToChange().
    * Ex. 30ct = 20ct + 10ct if 20ct is missing -->> 3 x 10ct
    *
-   * coinsCopyArr - a copy of coins array to splice in case of no values coins
+   * coinsArr - an array of available cash
+   * using loop to check if it is enough cash and push to coinsArr
+   * in case 1 cent is 0 - the array still has that value
    *
    */
   if (cents > 0) {
-    let coinsCopyArr = coins;
-    /**
-     * loop thought to check if it is enough coins
-     */
+    let coinsArr = [];
+
     for (let i = 0; i < coins.length; i++) {
-      if (coins[i][2] === 0) {
-        let idxOfNoCoin = 0; //get index of coins has 0 amount at Cashier
-        coins.forEach(val => {
-          if (val[2] === 0) {
-            idxOfNoCoin = coins.indexOf(val);
-            /**
-             * if all the cent except 1 cent has 0 amount then splice out of array
-             */
-            if (idxOfNoCoin !== coins.length - 1)
-              coinsCopyArr.splice(idxOfNoCoin, 1);
-            else if (idxOfNoCoin === coins.length - 1)
-              coinsCopyArr.splice(idxOfNoCoin, 0);
-          }
-        });
+      if (coins[i][2] !== 0) {
+        coinsArr.push(coins[i][1]);
       }
     }
+    if (coins.at(-1)[2] === 0) coinsArr.push(coins.at(-1)[1]);
+    console.log(coinsArr);
+
     /**
      *
      * calling amountToChange() to check how many kind of coin and amount of coin has to give back to customer and add it to array of coins
@@ -741,7 +721,7 @@ function countChange(sum, givenSum) {
      * in case has not to give back any coin then the amount of coins is 0
      *
      */
-    const coinsArr = coinsCopyArr.reduce((arr, cur) => arr.concat(cur[1]), []);
+    //const coinsArr = coinsCopyArr.reduce((arr, cur) => arr.concat(cur[1]), []);
     coinsChange = amountToChange(cents, coinsArr);
     coinsChange.forEach(
       val => (getCoinsChange[val] = (getCoinsChange[val] || 0) + 1)
