@@ -39,7 +39,7 @@ class Products {
   }
   /**
    *
-   * @param {num} num - % reduce for some products
+   * @param {number} num - % reduce for some products
    * @returns - the new price after reducing
    *
    */
@@ -590,21 +590,21 @@ function countChange(sum, givenSum) {
   const round = [
     ["oneHundredNote", 100, 20],
     ["fiftyNote", 50, 50],
-    ["twentyNote", 20, 100],
-    ["tenNote", 10, 100],
+    ["twentyNote", 20, 200],
+    ["tenNote", 10, 200],
     ["fiveNote", 5, 100],
     ["twoEuroCoin", 2, 200],
     ["oneEuroCoin", 1, 200],
   ];
+
   const coins = [
     ["fiftyCoin", 50, 200],
     ["twentyCoin", 20, 200],
     ["tenCoin", 10, 200],
     ["fiveCentCoin", 5, 200],
     ["twoCentCoin", 2, 500],
-    ["oneCentCoin", 1, 500],
+    ["oneCentCoin", 1, 0],
   ];
-
   let giveNote = {};
 
   /**
@@ -670,14 +670,14 @@ function countChange(sum, givenSum) {
         round.forEach(val => {
           if (val[2] === 0) {
             idxOfNoCash = round.indexOf(val);
-            /**
-             * if all the round currency except 1€ coin has 0 amount then splice out of array
-             */
-            if (idxOfNoCash !== round.length - 1)
-              roundCopyArr.splice(idxOfNoCash, 1);
-            else if (idxOfNoCash === round.length - 1)
-              roundCopyArr.splice(idxOfNoCash, 0);
           }
+          /**
+           * if all the round currency except 1€ coin has 0 amount then splice out of array
+           */
+          if (idxOfNoCash !== round.length - 1)
+            roundCopyArr.splice(idxOfNoCash, 1);
+          else if (idxOfNoCash === round.length - 1)
+            roundCopyArr.splice(idxOfNoCash, 0);
         });
       }
     }
@@ -709,7 +709,6 @@ function countChange(sum, givenSum) {
    */
   if (cents > 0) {
     let coinsCopyArr = coins;
-
     /**
      * loop thought to check if it is enough coins
      */
@@ -730,7 +729,6 @@ function countChange(sum, givenSum) {
         });
       }
     }
-
     /**
      *
      * calling amountToChange() to check how many kind of coin and amount of coin has to give back to customer and add it to array of coins
@@ -805,7 +803,7 @@ function countChange(sum, givenSum) {
  *
  * execute the change.
  * @param {number} num -  total amount of the change (or given amount) from customer
- * @param {array} arr - array of currency values (notes - coins)
+ * @param {array.number} arr - array of currency values (notes - coins)
  * @returns {array.number} - array contains the value of currency of the change
  *
  */
