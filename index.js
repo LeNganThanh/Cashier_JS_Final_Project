@@ -10,6 +10,40 @@ class Shop {
   }
 }
 
+//-------------Products------------------//
+//All products are sorted by kind of products with the name - code - price - unit detail and valid date for fresh food.
+
+//Store of Vegan Products
+class Vegan {
+  constructor(productName, productCode, price, unit, validDate) {
+    this.productCode = productCode;
+    this.productName = productName;
+    this.price = price;
+    this.unit = unit;
+    this.validDate = validDate; //in case of fresh food
+  }
+  getReduce(num) {
+    //get % reduce for some products
+    this.price = (this.price - (this.price / 100) * num).toFixed(2);
+  }
+}
+const tofu = new Vegan("Tofu", 7123, 1.89, "500g Package", "20/08/2022");
+const vegaBeef = new Vegan(
+  "Vegan Beef",
+  7564,
+  5.67,
+  "500g Package",
+  "30/07/2022"
+);
+const vegaFish = new Vegan(
+  "Vegan Fish Ball",
+  7566,
+  3,
+  45,
+  "750g Package",
+  "15/09/2022"
+);
+
 //Store of fresh Products
 class FreshProducts {
   constructor(productName, productCode, price, unit, validDate) {
@@ -26,25 +60,24 @@ class FreshProducts {
 }
 //setting some fresh products to shop
 const fish = new FreshProducts(
-  "Salmon",
+  "Basa",
   9876,
   3.45,
-  "1kg Salmon fish",
+  "1kg Basa fish",
   "20/07/2022"
 );
-const beef = new FreshProducts(
-  "Beef steak",
+const chicken = new FreshProducts(
+  "A chicken",
   7896,
-  6.54,
-  "500g Beef Fillet",
+  9.55,
+  "1kg chicken",
   "15/07/2022"
 );
 const pork = new FreshProducts(
-  "Pork",
+  "Pork Leg",
   4573,
-  4,
-  56,
-  "350g Package",
+  8.55,
+  "1.5kg Package",
   "17/07/2022"
 );
 
@@ -62,11 +95,15 @@ class DrinkProducts {
   }
 }
 
-//-------------Products------------------
 //getting drinking stuff for shop
-const coca = new DrinkProducts("Coca Cola", 2549, 1.21, "1.5l Bottle");
-const fanta = new DrinkProducts("Fanta", 2550, 1.21, "1.5l Bottle");
-const sprite = new DrinkProducts("Sprite", 2548, 1.21, "1.5l Bottle");
+const coconut = new DrinkProducts("Coconut", 2549, 1.75, "1l Bottle");
+const pomelo = new DrinkProducts("Pomelo Juice", 2550, 1.53, "750ml Bottle");
+const pineapple = new DrinkProducts(
+  "Pineapple Juice",
+  2548,
+  1.21,
+  "500ml Bottle"
+);
 
 //Store of Dry products
 class DryProducts {
@@ -89,6 +126,7 @@ const vermicelli = new DryProducts("Glass Noodle", 555, 2.45, "1kg Package");
 rice.getReduce(10); //set the reduce for product
 
 //Store of all products
+//In this store we can add all sort of products and delete some - can list all products in shop and search products.
 class ShopProducts {
   constructor() {
     this.products = []; //array to store all products in shop
@@ -108,20 +146,30 @@ class ShopProducts {
     //list all products in shop.
     console.log(this.products);
   }
+  searchProducts(product) {
+    const findItem = this.products.find(
+      item => (item.productName = product.productName)
+    );
+    console.log(findItem);
+  }
 }
-const shopProduct = new ShopProducts();
+const shopProducts = new ShopProducts();
 //adding all products to one list
-shopProduct.addProducts(rice);
-shopProduct.addProducts(noodle);
-shopProduct.addProducts(vermicelli);
-shopProduct.addProducts(coca);
-shopProduct.addProducts(fanta);
-shopProduct.addProducts(sprite);
-shopProduct.addProducts(fish);
-shopProduct.addProducts(beef);
-shopProduct.addProducts(pork);
-//shopProduct.deleteProduct(vermicelli);
-shopProduct.listProducts();
+shopProducts.addProducts(rice);
+shopProducts.addProducts(noodle);
+shopProducts.addProducts(vermicelli);
+shopProducts.addProducts(coconut);
+shopProducts.addProducts(pomelo);
+shopProducts.addProducts(pineapple);
+shopProducts.addProducts(fish);
+shopProducts.addProducts(chicken);
+shopProducts.addProducts(pork);
+shopProducts.addProducts(tofu);
+shopProducts.addProducts(vegaBeef);
+shopProducts.addProducts(vegaFish);
+//shopProducts.deleteProduct(vermicelli);
+//shopProducts.listProducts();
+//shopProducts.searchProducts(rice);
 
 //-----------------------BILL-------------------------//
 
@@ -337,9 +385,11 @@ bill1.getChange(100, countChange);
 
 //Setting the second bill
 // const bill2 = new Billing();
-// bill2.addProductToCart(vermicelli);
+// bill2.addProductToCart(vegaBeef);
+// bill2.addProductToCart(coconut);
 // //bill2.listProductToBuy();
-// bill2.makeBill(vermicelli, 2);
+// bill2.makeBill(coconut, 2);
+// bill2.makeBill(vegaBeef, 1);
 // bill2.getChange(20, countChange);
 
 //-----------A Callback function-------------------//
