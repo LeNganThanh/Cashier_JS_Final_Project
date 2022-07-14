@@ -756,24 +756,21 @@ function countChange(sum, givenSum) {
    * decrement the amount of note after give back the change
    * getRoundChange object will give the amount of note has to give back
    *
-   * noteOfChangeKeys - get the value of note to make a loop
-   * noteOfChangeValues - get the amount of note from getRoundChange Object
-   *
-   * loop thought from big value note to small value note
+   * sortNoteChange - get an array of object sort from big value to smaller value
    *
    * if the value is 1€ or 2€ that will be "coin"
    *
    */
 
-  const noteOfChangeKeys = Object.keys(getRoundChange);
-  const noteOfChangeValues = Object.values(getRoundChange);
-
-  for (let i = noteOfChangeKeys.length - 1; i >= 0; i--) {
-    if (noteOfChangeKeys[i] === "1" || noteOfChangeKeys[i] === "2")
-      toText += `    ${noteOfChangeValues[i]} x ${noteOfChangeKeys[i]}€ coin
-                       `;
+  const sortNoteChange = Object.entries(getRoundChange).sort(
+    (a, b) => b[0] - a[0]
+  );
+  for (let [note, amount] of sortNoteChange) {
+    if (note === 1 || note === 2)
+      toText += `    ${amount} x ${note}€ coin
+    `;
     else
-      toText += `    ${noteOfChangeValues[i]} x ${noteOfChangeKeys[i]}€ note
+      toText += `    ${amount} x ${note}€ note
                        `;
   }
 
@@ -785,17 +782,15 @@ function countChange(sum, givenSum) {
    * decrement the amount of coins after give back
    * getCoinsChange object will give the amount of coins has to give back
    *
-   * coinOfChangeKeys - get the value of note to make a loop
-   * coinOfChangeValues - get the amount of note from getCoinsChange Object
+   * sortCoinChange - get an array of sort coins object from big to small value coin
    *
-   * loop thought from big value coin to small value coin
    */
 
-  const coinOfChangeKeys = Object.keys(getCoinsChange);
-  const coinOfChangeValues = Object.values(getCoinsChange);
-
-  for (let i = coinOfChangeKeys.length - 1; i >= 0; i--) {
-    toText += `    ${coinOfChangeValues[i]} x ${coinOfChangeKeys[i]} cent
+  const sortCoinChange = Object.entries(getCoinsChange).sort(
+    (a, b) => b[0] - a[0]
+  );
+  for (let [coin, amount] of sortCoinChange) {
+    toText += `    ${amount} x ${coin} cent
                        `;
   }
 
