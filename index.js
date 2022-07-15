@@ -113,8 +113,10 @@ const pork = new Products(
 );
 
 /**
+ *
  * reducing price
  * @param {number} - % reduce for some products
+ *
  */
 rice.getReduce(10);
 
@@ -129,7 +131,7 @@ rice.getReduce(10);
  * @param {array.object} dryProducts - store all dry products
  *
  */
-//
+
 class ShopProducts {
   constructor() {
     this.products = [];
@@ -283,10 +285,10 @@ shopProducts.addVeganProduct(vegaFish);
  * @param {string} email - the email of shop
  * @param {number} tel - the telephone number of shop
  *
- * products - array of shopping products
- * bill - object contains the shopping products and price
- * billDate - getting the date for the bill
- * billNumber - getting the bill number
+ * @param {array.object} products - the shopping products
+ * @param {object} bill - contains the shopping products and price
+ * @param {string} billDate - the Date of bill (dd - month(in word) - yyyy)
+ * @param {string} billNumber - the bill number (date + hour + minutes)
  *
  */
 
@@ -299,7 +301,9 @@ class Billing extends Shop {
     this.billNumber = "";
   }
   /**
+   *
    * @param  {object} products - Adding product to shopping cart
+   *
    */
   addProductToCart(...products) {
     this.products.push(...products);
@@ -321,7 +325,7 @@ class Billing extends Shop {
   }
 
   /**
-   * list all the products in Cart
+   * list all the shopping products
    */
   listProductToBuy() {
     console.log(this.products);
@@ -334,12 +338,13 @@ class Billing extends Shop {
    * @param {object} product - that contains all information about product
    * @param {number} quantity - the number of product to buy
    *
-   * getting roduct out of products list to get the price by using "filter"
-   * the total amount is depends on the quantity of items.
+   * getting product out of products list to get the price by using "filter"
+   * total - the total amount is depends on the quantity of items.
+   * result - product object from the list
    *
    */
   makeBill(product, quantity) {
-    let total = 0; //Create a variable to store total amount to pay
+    let total = 0;
 
     let result = this.products.filter(
       item => item.productCode === product.productCode
@@ -382,7 +387,6 @@ class Billing extends Shop {
    *
    */
   getDate() {
-    //
     let monthArr = [
       "Jan",
       "Feb",
@@ -433,8 +437,8 @@ class Billing extends Shop {
    *
    * @param {number} num - the total cash from customer
    * @param {function} cbChange - a callback  to execute the change  - it is called in the BILL printout
-   *  //callback function will receive the change as the pay back amount and num as the total payment from customer.
-   * @returns {string}- the Bill printout
+   callback function will receive the change as the pay back amount and num as the total payment from customer.
+   @returns {string}- the Bill printout
    *
    * sumOfBill - calculate the total amount of all products.
    *
@@ -683,7 +687,7 @@ function countChange(sum, givenSum) {
      */
     roundChange = amountToChange(roundSum, roundArr);
     /**
-     * if 1€ has amount of 0 then calculate to cents
+     * if 1€ has amount of 0 then count it to cents and add to cents amount
      */
     roundChange.forEach(oneE => {
       let countOneE = 0;
