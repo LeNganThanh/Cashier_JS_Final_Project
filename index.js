@@ -41,7 +41,7 @@ class Products {
   /**
    *
    * @param {number} num - % reduce for some products
-   * @returns - the new price after reducing
+   * @returns {number} - the new price after reducing
    *
    */
   getReduce(num) {
@@ -313,7 +313,6 @@ class Billing extends Shop {
    *
    * Delete unneeded product
    * @param {object} product - product doesn't need to buy
-   *
    * find the index of product and using splice to get out of list
    *
    */
@@ -339,8 +338,9 @@ class Billing extends Shop {
    * @param {number} quantity - the number of product to buy
    *
    * getting product out of products list to get the price by using "filter"
-   * total - the total amount is depends on the quantity of items.
-   * result - product object from the list
+   *
+   * @param {number} total - the total amount is depends on the quantity of items.
+   * @param {object} result - product object from the list
    *
    */
   makeBill(product, quantity) {
@@ -358,7 +358,8 @@ class Billing extends Shop {
   /**
    * Text to printout---------------------------------
    *
-   * @returns {string} - Text to printout on the Bill
+   * @returns {string} textShoppingItems - Text to printout on the Bill
+   *
    * getting products name and amount from bill object
    * using padEnd or padStart to get align the text.
    * using parseFloat and toFixed to get decimal to 2 digits.
@@ -379,9 +380,9 @@ class Billing extends Shop {
    * setting the bill date
    *
    * @returns {string} - a string of date dd/mm/yyyy
-   * monthArr - use to printout month in word.
-   * today - getting today Date
-   * todayMonth - get number of month to convert to text by using monthArr
+   * @param {array.string} monthArr - use to printout month in word.
+   * @param {date} today - getting today Date
+   * @param {month} todayMonth - get number of month to convert to text by using monthArr
    *
    * using padStart in the case of 1 digit then it should show 2 digits with 0 in front.
    *
@@ -413,7 +414,7 @@ class Billing extends Shop {
    *setting the bill number
    *
    * @returns {string} -  //Bill number includes today date + hour + minute.
-   * today - get today Date for the bill number
+   * @param {date} today - get today Date for the bill number
    * using padStart in the case of 1 digit then it should show 2 digits with 0 in front.
    *
    */
@@ -438,9 +439,9 @@ class Billing extends Shop {
    * @param {number} num - the total cash from customer
    * @param {function} cbChange - a callback  to execute the change  - it is called in the BILL printout
    callback function will receive the change as the pay back amount and num as the total payment from customer.
-   @returns {string}- the Bill printout
+   * @returns {string}- the Bill printout
    *
-   * sumOfBill - calculate the total amount of all products.
+   * @param {number} sumOfBill - calculate the total amount of all products.
    *
    */
   getChange(num, cbChange) {
@@ -537,6 +538,7 @@ class Billing extends Shop {
 /**
  * ------------------Get shopping---------------------------
  * setting the first bill - instance of Billing class
+ *
  */
 const bill1 = new Billing();
 
@@ -555,7 +557,8 @@ bill1.makeBill(noodle, 1); //buying product - adding to bill
 
 /**
  * 100 - amount payment from customer
- * countChange is a callback function to execute the change
+ * @param {function} countChange is a callback function to execute the change
+ *
  */
 bill1.getChange(100, countChange);
 
@@ -587,9 +590,9 @@ bill1.getChange(100, countChange);
 function countChange(sum, givenSum) {
   /**
    *
-   * round - array of full Euro notes and coins (name of currency - value of currency - amount of current at Cashier)
-   * coins - array of all Euro cents (name of coin - value of coin - amount of coins at Cashier)
-   * giveNote - object obtain the amount payment given by customer.
+   * @param {array.array.string && number} round - array of full Euro notes and coins (name of currency - value of currency - amount of current at Cashier)
+   * @param {array.array.string && number } coins - array of all Euro cents (name of coin - value of coin - amount of coins at Cashier)
+   * @param {object} giveNote - object will receive the amount of each notes given by roundNote array
    *
    */
   const round = [
@@ -614,10 +617,9 @@ function countChange(sum, givenSum) {
 
   /**
    *
-   * calling amountToChange() to check how many kind of currency note and amount of note given by customer and add it to array of currency
-   * roundArr get all the value of currency in cash to provide an array to check in amountToChange()
-   * roundNote get an array of values from the amountToChange()
-   * giveNote object will receive the amount of each notes given by roundNote array
+   * @param {function} amountToChange() - checking how many kind of currency note and amount of note given by customer and add it to array of currency
+   * @param {array.number} roundArr - get all the value of currency in cash to provide an array to check in amountToChange()
+   * @param {array.number} roundNote - get an array of values from the amountToChange()
    *
    */
 
@@ -637,13 +639,13 @@ function countChange(sum, givenSum) {
   /**
    * -----------------The Change---------------------
    *
-   * roundSum - get the round currency sum of bill (50€, 2€....)
-   * cents - get the cents of bill
-   * roundChange - array of round currency of the change
-   * coinsChange - array of  coins of the change
-   * getRoundChange - Object of total round currency of the change
-   * getCoinsChange - Object of coins of the change
-   * toText - Get details of the change to get printout on the Bill
+   * @param {number} roundSum - get the round currency sum of bill (50€, 2€....)
+   * @param {number} cents - get the cents of bill
+   * @param {array.number} roundChange - array of round currency of the change
+   * @param {array.number} coinsChange - array of  coins of the change
+   * @param {object} getRoundChange - Object of total round currency of the change
+   * @param {object} getCoinsChange - Object of coins of the change
+   * @param {sting} toText - Get details of the change to get printout on the Bill
    *
    */
 
@@ -661,7 +663,8 @@ function countChange(sum, givenSum) {
    * if some note has amount of 0 then get out of array
    * Ex. the change is 80€ = 50€ + 20€ + 10€ - if the Cashier has no 50€ note then the array has no 50 value -->> 4 x 20€
    *
-   * roundArr - an array of available cash
+   * @param {array.number} roundArr - an array of available cash
+   *
    * using loop to check if it is enough cash and push to roundArr
    * in case 1€ is 0 - the array still has that value
    *
@@ -678,36 +681,34 @@ function countChange(sum, givenSum) {
 
     /**
      *
-     * calling amountToChange() to check how many kind of currency note and amount of note has to give back to customer and add it to array of currency notes
-     * roundArr get all the value of currency in cash to provide an array to check in amountToChange()
-     * roundChange get an array of values from the amountToChange()
-     * getRoundChange object will receive the currency note and amount of note to give back
+     * @param {function} amountToChange() checking how many kind of currency note and amount of note has to give back to customer and add it to array of currency notes
+     * @param {array.number} roundArr get all the value of currency in cash to provide an array to check in amountToChange()
+     * @param {function} roundChange get an array of values from the amountToChange()
+     * @param {object} getRoundChange object will receive the currency note and amount of note to give back
+     *
      * in case has not to give back any note then the amount of round currency is 0
      *
      */
     roundChange = amountToChange(roundSum, roundArr);
-    /**
-     * if 1€ has amount of 0 then count it to cents and add to cents amount
-     */
-    roundChange.forEach(oneE => {
+    roundChange.forEach(val => {
+      getRoundChange[val] = (getRoundChange[val] || 0) + 1;
+
+      /**
+       * if 1€ has amount of 0 then count it to cents and add to cents amount
+       */
       let countOneE = 0;
-      if (oneE === 1) countOneE++;
+      if (val === 1) countOneE++;
       if (countOneE > 0 && round.at(-1)[2] === 0) {
         cents += countOneE * 100;
       }
     });
 
     /**
-     * get index of 1€ has amount of 0 out of return array from amountToChange()
+     * delete 1€ has amount of 0 out of getRoundChange object
      */
-    let idxOne = 0;
     if (round.at(-1)[2] === 0 && roundChange.at(-1) === 1) {
-      idxOne = roundChange.findIndex(item => item === 1);
+      delete getRoundChange["1"];
     }
-    roundChange.splice(idxOne, 1);
-    roundChange.forEach(
-      val => (getRoundChange[val] = (getRoundChange[val] || 0) + 1)
-    );
   } else if (roundSum === 0) roundChange = roundSum;
 
   /**
@@ -716,7 +717,8 @@ function countChange(sum, givenSum) {
    * if some kind of coins is missing then get delete out of array to use to execute amountToChange().
    * Ex. 30ct = 20ct + 10ct if 20ct is missing -->> 3 x 10ct
    *
-   * coinsArr - an array of available cash
+   * @param {array.number} coinsArr - an array of available cash
+   *
    * using loop to check if it is enough cash and push to coinsArr
    * in case 1 cent is 0 - the array still has that value
    *
@@ -733,12 +735,11 @@ function countChange(sum, givenSum) {
 
     /**
      *
-     * calling amountToChange() to check how many kind of coin and amount of coin has to give back to customer and add it to array of coins
+     * @param {function} amountToChange() to check how many kind of coin and amount of coin has to give back to customer and add it to array of coins
+     * @param {array.number} coinsArr get all the value of coins to provide an array to check in amountToChange()
+     * @param {array.number} coinsChange get an array of values from the amountToChange()
+     * @param {object} getCoinsChange object will receive the coins value and amount of coins to give back
      *
-     * coinsArr get all the value of coins to provide an array to check in amountToChange()
-     * coinsChange get an array of values from the amountToChange()
-     *
-     * getCoinsChange object will receive the coins value and amount of coins to give back
      * in case has not to give back any coin then the amount of coins is 0
      *
      */
@@ -753,9 +754,9 @@ function countChange(sum, givenSum) {
    * Text to printout--------------------
    * get printout the currency note of change on the Bill
    * decrement the amount of note after give back the change
-   * getRoundChange object will give the amount of note has to give back
    *
-   * sortNoteChange - get an array of object sort from big value to smaller value
+   * @param {object} getRoundChange object will give the amount of note has to give back
+   * @param {array.object} sortNoteChange - get an array of object sort from big value to smaller value
    *
    * if the value is 1€ or 2€ that will be "coin"
    *
@@ -777,11 +778,10 @@ function countChange(sum, givenSum) {
    *
    * Text to printout--------------------
    * get printout the coins of change on the Bill
-   *
    * decrement the amount of coins after give back
-   * getCoinsChange object will give the amount of coins has to give back
    *
-   * sortCoinChange - get an array of sort coins object from big to small value coin
+   * @param {object} getCoinsChange object will give the amount of coins has to give back
+   * @param {array.object} sortCoinChange - get an array of sort coins object from big to small value coin
    *
    */
 
@@ -794,7 +794,7 @@ function countChange(sum, givenSum) {
   }
 
   /**
-   * @returns(string) - Return the change details Text to the Bill
+   * @returns {string} - Return the change details Text to the Bill
    */
   return toText;
 }
@@ -803,11 +803,13 @@ function countChange(sum, givenSum) {
  * ------------------RECURSION-----------------
  *
  * execute the change.
+ *
  * @param {number} num -  total amount of the change (or given amount) from customer
  * @param {array.number} arr - array of currency values (notes - coins)
  * @returns {array.number} - array contains the value of currency of the change
  *
  */
+
 function amountToChange(num, arr) {
   let temp = 0;
   if (num === 0) return [];
