@@ -507,22 +507,24 @@ class Billing extends Shop {
 
         ------------------THE BILL------------------
 
-        Bill Nr. 13072022-1636
-        Bill Date. 13 - Jul - 2022
+        Bill Nr. 15072022-1327
+        Bill Date. 15 - Jul - 2022
 
         --------------------------------------------
 
         Shopping items 
-        Rice           : 42.75€
-        Instance Noodle: 13.55€
-        Total :          56.3€
-        Your paid :      100€
-        You get back :   43.69€
-        Your change :    1 x 1€ coin
-                         1 x 2€ coin
-                         2 x 20€ note
-                         1 x 20 cent
-                         1 x 50 cent
+        Rice           :   42.76€
+        Instance Noodle:   13.55€
+        Total :            56.31€
+        Your paid :        100€
+        You get back :     43.69€
+        Your change :      2 x 20€ note
+                           1 x 2€ coin
+                           1 x 1€ coin
+                           1 x 50 cent
+                           1 x 10 cent
+                           1 x 5 cent
+                           2 x 2 cent
                        
 
         --------------------------------------------
