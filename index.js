@@ -607,7 +607,7 @@ function countChange(sum, givenSum) {
     ["oneCentCoin", 1, 300],
   ];
   let giveNote = {};
-  console.log(coins);
+
   /**
    *
    * calling amountToChange() to check how many kind of currency note and amount of note given by customer and add it to array of currency
@@ -644,7 +644,7 @@ function countChange(sum, givenSum) {
    */
 
   const roundSum = Math.floor(sum);
-  const cents = Number((sum - Math.floor(sum)) * 100).toFixed(2);
+  let cents = Number((sum - Math.floor(sum)) * 100); //.toFixed(2);
   let roundChange = [];
   let coinsChange = [];
   let getRoundChange = {};
@@ -681,8 +681,26 @@ function countChange(sum, givenSum) {
      * in case has not to give back any note then the amount of round currency is 0
      *
      */
-
     roundChange = amountToChange(roundSum, roundArr);
+    /**
+     * if 1€ has amount of 0 then calculate to cents
+     */
+    roundChange.forEach(oneE => {
+      let countOneE = 0;
+      if (oneE === 1) countOneE++;
+      if (countOneE > 0 && round.at(-1)[2] === 0) {
+        cents += countOneE * 100;
+      }
+    });
+
+    /**
+     * get index of 1€ has amount of 0 out of return array from amountToChange()
+     */
+    let idxOne = 0;
+    if (round.at(-1)[2] === 0 && roundChange.at(-1) === 1) {
+      idxOne = roundChange.findIndex(item => item === 1);
+    }
+    roundChange.splice(idxOne, 1);
     roundChange.forEach(
       val => (getRoundChange[val] = (getRoundChange[val] || 0) + 1)
     );
@@ -708,7 +726,6 @@ function countChange(sum, givenSum) {
       }
     }
     if (coins.at(-1)[2] === 0) coinsArr.push(coins.at(-1)[1]);
-    console.log(coinsArr);
 
     /**
      *
@@ -721,8 +738,7 @@ function countChange(sum, givenSum) {
      * in case has not to give back any coin then the amount of coins is 0
      *
      */
-    //const coinsArr = coinsCopyArr.reduce((arr, cur) => arr.concat(cur[1]), []);
-    coinsChange = amountToChange(cents, coinsArr);
+    coinsChange = amountToChange(cents.toFixed(), coinsArr);
     coinsChange.forEach(
       val => (getCoinsChange[val] = (getCoinsChange[val] || 0) + 1)
     );
