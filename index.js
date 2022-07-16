@@ -299,6 +299,7 @@ class Billing extends Shop {
     this.bill = {};
     this.billDate = "";
     this.billNumber = "";
+    this.billDetail = {};
   }
   /**
    *
@@ -342,6 +343,9 @@ class Billing extends Shop {
    * @param {number} total - the total amount is depends on the quantity of items.
    * @param {object} result - product object from the list
    *
+   * @param {object} bill - contains product name and total
+   * @param {object} billDetail - contains product price and quantity
+   *
    */
   makeBill(product, quantity) {
     let total = 0;
@@ -353,6 +357,7 @@ class Billing extends Shop {
     if (quantity >= 2) total = total * quantity;
 
     this.bill[product.productName] = total;
+    this.billDetail[product.price] = quantity;
   }
 
   /**
@@ -360,20 +365,28 @@ class Billing extends Shop {
    *
    * @returns {string} textShoppingItems - Text to printout on the Bill
    *
-   * getting products name and amount from bill object
+   * @param {array.object} - proDetail - contains product price and the quantity
+   * @param {array.object} - billArr - contains bill object of product name and total
+   *
    * using padEnd or padStart to get align the text.
    * using parseFloat and toFixed to get decimal to 2 digits.
    *
    */
   shoppingToText() {
     let textShoppingItems = "";
-    for (let [item, price] of Object.entries(this.bill)) {
+    let proDetail = Object.entries(this.billDetail);
+    let billArr = Object.entries(this.bill);
+    for (let i = 0; i < Object.keys(this.billDetail).length; i++) {
       textShoppingItems += `
-        ${item.padEnd(15, " ")}: ${parseFloat(price)
+        ${billArr[i][0].padEnd(15, " ")}: ${parseFloat(billArr[i][1])
         .toFixed(2)
         .toString()
-        .padStart(7, " ")}€`;
+        .padStart(7, " ")}€ (${proDetail[i][1]} x ${proDetail[i][0]}€)`;
     }
+
+    for (let [item, price] of Object.entries(this.bill)) {
+    }
+
     return textShoppingItems;
   }
   /**
@@ -564,8 +577,9 @@ bill1.makeBill(noodle, 1); //buying product - adding to bill
  */
 bill1.getChange(100, countChange);
 
-//console.log(bill1.getChange("card"));//a situation if customer pay by card
-
+//console.log(bill1.getChange("card")); //a situation if customer pay by card
+//bill1.getChange(56.21);
+//bill1.getChange(56.31);
 /**
  * setting the second bill
  */
@@ -574,8 +588,8 @@ bill1.getChange(100, countChange);
 // bill2.addProductToCart(coconut);
 // //bill2.listProductToBuy();
 // bill2.makeBill(coconut, 2);
-// bill2.makeBill(vegaBeef, 1);
-// bill2.getChange(20, countChange);
+// bill2.makeBill(vegaBeef, 3);
+// bill2.getChange(100, countChange);
 
 ///////////////////////////////////////////////////////
 
