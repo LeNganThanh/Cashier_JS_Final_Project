@@ -243,7 +243,7 @@ class ShopProducts {
    */
   searchProducts(product) {
     const findItem = this.products.find(
-      item => (item.productName = product.productName)
+      item => item.productName === product.productName
     );
     console.log(findItem);
   }
@@ -289,6 +289,7 @@ shopProducts.addVeganProduct(vegaFish);
  * @param {object} bill - contains the shopping products and price
  * @param {string} billDate - the Date of bill (dd - month(in word) - yyyy)
  * @param {string} billNumber - the bill number (date + hour + minutes)
+ * @param {object} billDetail - contains product price and quantity
  *
  */
 
@@ -342,7 +343,6 @@ class Billing extends Shop {
    *
    * @param {number} total - the total amount is depends on the quantity of items.
    * @param {object} result - product object from the list
-   *
    * @param {object} bill - contains product name and total
    * @param {object} billDetail - contains product price and quantity
    *
@@ -364,7 +364,6 @@ class Billing extends Shop {
    * Text to printout---------------------------------
    *
    * @returns {string} textShoppingItems - Text to printout on the Bill
-   *
    * @param {array.object} - proDetail - contains product price and the quantity
    * @param {array.object} - billArr - contains bill object of product name and total
    *
@@ -424,7 +423,7 @@ class Billing extends Shop {
   }
 
   /**
-   *setting the bill number
+   * setting the bill number
    *
    * @returns {string} -  //Bill number includes today date + hour + minute.
    * @param {date} today - get today Date for the bill number
@@ -445,18 +444,17 @@ class Billing extends Shop {
   }
 
   /**
-   *
-   * setting up the bill printout --------------------------
+   * setting up the bill printout ---------------
    * to complete the bill - we need the Change to give back the rest amount of payment to customer.
    *
    * @param {number} num - the total cash from customer
    * @param {function} cbChange - a callback  to execute the change  - it is called in the BILL printout
    callback function will receive the change as the pay back amount and num as the total payment from customer.
    * @returns {string}- the Bill printout
-   *
    * @param {number} sumOfBill - calculate the total amount of all products.
    *
    */
+
   getChange(num, cbChange) {
     let sumOfBill = Object.values(this.bill).reduce(
       (sum, price) => sum + price,
@@ -520,14 +518,14 @@ class Billing extends Shop {
 
         ------------------THE BILL------------------
 
-        Bill Nr. 15072022-1327
-        Bill Date. 15 - Jul - 2022
+        Bill Nr. 16072022-1535
+        Bill Date. 16 - Jul - 2022
 
         --------------------------------------------
 
         Shopping items 
-        Rice           :   42.76€
-        Instance Noodle:   13.55€
+        Rice           :   42.76€ (2 x 21.38€)
+        Instance Noodle:   13.55€ (1 x 13.55€)
         Total :            56.31€
         Your paid :        100€
         You get back :     43.69€
@@ -546,6 +544,7 @@ class Billing extends Shop {
         Address : Hamburger 123, Hamburg
         Tel :     123456789
         Email :   asianMarkt@gmail.com
+
 */
 
 /////////////////////////////////////////////////////////////
@@ -564,7 +563,7 @@ bill1.addProductToCart(rice);
 bill1.addProductToCart(noodle);
 bill1.addProductToCart(vermicelli);
 
-//bill1.deleteProduct(vermicelli); //delete product out of list
+bill1.deleteProduct(vermicelli); //delete product out of list
 //bill1.listProductToBuy(); //Show all products
 
 bill1.makeBill(rice, 2); //buying product - adding to bill - 2 is quantity
@@ -608,15 +607,15 @@ function countChange(sum, givenSum) {
    *
    * @param {array.array.string && number} round - array of full Euro notes and coins (name of currency - value of currency - amount of current at Cashier)
    * @param {array.array.string && number } coins - array of all Euro cents (name of coin - value of coin - amount of coins at Cashier)
-   * @param {object} giveNote - object will receive the amount of each notes given by roundNote array
    *
    */
+
   const round = [
     ["oneHundredNote", 100, 20],
     ["fiftyNote", 50, 50],
-    ["twentyNote", 20, 200],
-    ["tenNote", 10, 200],
-    ["fiveNote", 5, 300],
+    ["twentyNote", 20, 100],
+    ["tenNote", 10, 100],
+    ["fiveNote", 5, 200],
     ["twoEuroCoin", 2, 300],
     ["oneEuroCoin", 1, 300],
   ];
@@ -629,15 +628,18 @@ function countChange(sum, givenSum) {
     ["twoCentCoin", 2, 300],
     ["oneCentCoin", 1, 300],
   ];
-  let giveNote = {};
 
   /**
+   * adding note to Cashier
    *
+   * @param {object} giveNote - object will receive the amount of each notes given by roundNote array
    * @param {function} amountToChange() - checking how many kind of currency note and amount of note given by customer and add it to array of currency
    * @param {array.number} roundArr - get all the value of currency in cash to provide an array to check in amountToChange()
    * @param {array.number} roundNote - get an array of values from the amountToChange()
    *
    */
+
+  let giveNote = {};
 
   const roundArr = round.reduce((arr, cur) => arr.concat(cur[1]), []);
   let roundNote = amountToChange(givenSum, roundArr);
@@ -646,6 +648,7 @@ function countChange(sum, givenSum) {
   /**
    * loop through the round array to add the amount of note has given by customer to the total of cash at Cashier
    */
+
   for (let [note, amount] of Object.entries(giveNote)) {
     for (let i = 0; i < round.length; i++) {
       if (round[i][1] === Number(note)) round[i][2] += amount;
@@ -685,8 +688,10 @@ function countChange(sum, givenSum) {
    * in case 1€ is 0 - the array still has that value
    *
    */
+
   if (roundSum > 0) {
     let roundArr = [];
+    //round.forEach(val => roundArr.push(val[1]));
 
     for (let i = 0; i < round.length; i++) {
       if (round[i][2] !== 0) {
@@ -705,6 +710,7 @@ function countChange(sum, givenSum) {
      * in case has not to give back any note then the amount of round currency is 0
      *
      */
+
     roundChange = amountToChange(roundSum, roundArr);
     roundChange.forEach(val => {
       getRoundChange[val] = (getRoundChange[val] || 0) + 1;
@@ -712,16 +718,34 @@ function countChange(sum, givenSum) {
       /**
        * if 1€ has amount of 0 then count it to cents and add to cents amount
        */
+
       let countOneE = 0;
       if (val === 1) countOneE++;
       if (countOneE > 0 && round.at(-1)[2] === 0) {
         cents += countOneE * 100;
       }
     });
+    /**
+     * Countdown the amount of currency
+     */
+    let exeGetRoundChange = Object.entries(getRoundChange);
+    for (let i = 0; i < round.length; i++) {
+      for (let j = 0; j < exeGetRoundChange.length; j++) {
+        if (Number(exeGetRoundChange[j][1]) > round[i][2] && round[i][2] > 0) {
+          getRoundChange[round[i][1]] = round[i][2];
+          let temp = Number(exeGetRoundChange[j][1]) - round[i][2];
+          if (temp <= round[i + 1][2]) {
+            let nextVal = round[i + 1][1];
+            getRoundChange[nextVal] = (temp * round[i][1]) / nextVal;
+          }
+        }
+      }
+    }
 
     /**
      * delete 1€ has amount of 0 out of getRoundChange object
      */
+
     if (round.at(-1)[2] === 0 && roundChange.at(-1) === 1) {
       delete getRoundChange["1"];
     }
@@ -739,6 +763,7 @@ function countChange(sum, givenSum) {
    * in case 1 cent is 0 - the array still has that value
    *
    */
+
   if (cents > 0) {
     let coinsArr = [];
 
@@ -759,6 +784,7 @@ function countChange(sum, givenSum) {
      * in case has not to give back any coin then the amount of coins is 0
      *
      */
+
     coinsChange = amountToChange(cents.toFixed(), coinsArr);
     coinsChange.forEach(
       val => (getCoinsChange[val] = (getCoinsChange[val] || 0) + 1)
