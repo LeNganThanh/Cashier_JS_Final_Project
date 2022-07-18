@@ -613,9 +613,9 @@ function countChange(sum, givenSum) {
   const round = [
     ["oneHundredNote", 100, 20],
     ["fiftyNote", 50, 50],
-    ["twentyNote", 20, 100],
-    ["tenNote", 10, 100],
-    ["fiveNote", 5, 200],
+    ["twentyNote", 20, 1],
+    ["tenNote", 10, 1],
+    ["fiveNote", 5, 1],
     ["twoEuroCoin", 2, 300],
     ["oneEuroCoin", 1, 300],
   ];
@@ -641,20 +641,18 @@ function countChange(sum, givenSum) {
 
   let giveNote = {};
 
-  const roundArr = round.reduce((arr, cur) => arr.concat(cur[1]), []);
-  let roundNote = amountToChange(givenSum, roundArr);
+  let roundNote = amountToChange(givenSum, 1, round);
   roundNote.forEach(val => (giveNote[val] = (giveNote[val] || 0) + 1));
 
-  /**
-   * loop through the round array to add the amount of note has given by customer to the total of cash at Cashier
-   */
+  // /**
+  //  * loop through the round array to add the amount of note has given by customer to the total of cash at Cashier
+  //  */
 
   for (let [note, amount] of Object.entries(giveNote)) {
     for (let i = 0; i < round.length; i++) {
       if (round[i][1] === Number(note)) round[i][2] += amount;
     }
   }
-
   /**
    * -----------------The Change---------------------
    *
@@ -690,31 +688,25 @@ function countChange(sum, givenSum) {
    */
 
   if (roundSum > 0) {
-    let roundArr = [];
-    //round.forEach(val => roundArr.push(val[1]));
-
-    for (let i = 0; i < round.length; i++) {
-      if (round[i][2] !== 0) {
-        roundArr.push(round[i][1]);
-      }
-    }
-    if (round.at(-1)[2] === 0) roundArr.push(round.at(-1)[1]);
-
     /**
      *
      * @param {function} amountToChange() checking how many kind of currency note and amount of note has to give back to customer and add it to array of currency notes
-     * @param {array.number} roundArr get all the value of currency in cash to provide an array to check in amountToChange()
+     * @param {array.number} exeRoundArr get all the value of currency in cash to provide an array to check in amountToChange()
+     * @param {number} amount - the amount of currency in cash
      * @param {function} roundChange get an array of values from the amountToChange()
      * @param {object} getRoundChange object will receive the currency note and amount of note to give back
      *
      * in case has not to give back any note then the amount of round currency is 0
      *
      */
-
-    roundChange = amountToChange(roundSum, roundArr);
+    const exeRoundArr = [];
+    round.forEach(val => {
+      if (val[1] <= 20) exeRoundArr.push(val);
+    });
+    let amount = exeRoundArr[0][2];
+    roundChange = amountToChange(43, amount, exeRoundArr);
     roundChange.forEach(val => {
       getRoundChange[val] = (getRoundChange[val] || 0) + 1;
-
       /**
        * if 1€ has amount of 0 then count it to cents and add to cents amount
        */
@@ -725,22 +717,6 @@ function countChange(sum, givenSum) {
         cents += countOneE * 100;
       }
     });
-    /**
-     * Countdown the amount of currency
-     */
-    let exeGetRoundChange = Object.entries(getRoundChange);
-    for (let i = 0; i < round.length; i++) {
-      for (let j = 0; j < exeGetRoundChange.length; j++) {
-        if (Number(exeGetRoundChange[j][1]) > round[i][2] && round[i][2] > 0) {
-          getRoundChange[round[i][1]] = round[i][2];
-          let temp = Number(exeGetRoundChange[j][1]) - round[i][2];
-          if (temp <= round[i + 1][2]) {
-            let nextVal = round[i + 1][1];
-            getRoundChange[nextVal] = (temp * round[i][1]) / nextVal;
-          }
-        }
-      }
-    }
 
     /**
      * delete 1€ has amount of 0 out of getRoundChange object
@@ -777,7 +753,8 @@ function countChange(sum, givenSum) {
     /**
      *
      * @param {function} amountToChange() to check how many kind of coin and amount of coin has to give back to customer and add it to array of coins
-     * @param {array.number} coinsArr get all the value of coins to provide an array to check in amountToChange()
+     * @param {array.number} exeCoinsArr get all the value of coins to provide an array to check in amountToChange()
+     * @param {number} amtCoins - total amount of coin in cash
      * @param {array.number} coinsChange get an array of values from the amountToChange()
      * @param {object} getCoinsChange object will receive the coins value and amount of coins to give back
      *
@@ -785,7 +762,13 @@ function countChange(sum, givenSum) {
      *
      */
 
-    coinsChange = amountToChange(cents.toFixed(), coinsArr);
+    const exeCoinsArr = [];
+    coins.forEach(val => {
+      if (val[1] <= cents) exeCoinsArr.push(val);
+    });
+    let amtCoins = exeCoinsArr[0][2];
+
+    coinsChange = amountToChange(cents.toFixed(), amtCoins, exeCoinsArr);
     coinsChange.forEach(
       val => (getCoinsChange[val] = (getCoinsChange[val] || 0) + 1)
     );
@@ -847,21 +830,26 @@ function countChange(sum, givenSum) {
  * execute the change.
  *
  * @param {number} num -  total amount of the change (or given amount) from customer
+ * @param {number} amt - amount of currency in cash
  * @param {array.number} arr - array of currency values (notes - coins)
  * @returns {array.number} - array contains the value of currency of the change
  *
  */
 
-function amountToChange(num, arr) {
+function amountToChange(num, amt, arr) {
   let temp = 0;
   if (num === 0) return [];
   else {
-    if (num >= arr[0]) {
-      temp = num - arr[0];
-      return [arr[0]].concat(amountToChange(temp, arr));
-    } else {
-      arr.shift();
-      return amountToChange(num, arr);
+    for (let i = 0; i < arr.length; i++) {
+      if (num >= arr[i][1] && amt > 0) {
+        temp = num - arr[i][1];
+        amt--;
+        return [arr[i][1]].concat(amountToChange(temp, amt, arr));
+      } else {
+        arr.shift();
+        amt = arr[i][2];
+        return amountToChange(num, amt, arr);
+      }
     }
   }
 }
