@@ -466,11 +466,28 @@ class Billing extends Shop {
     if (num === "card") return "You paid by Card.";
     /**
      * checking if the given amount is less than the Bill total
+     *
+     * @param {number} needMorePayment - the total amount of needed more payment
+     * @param {string} textMorePayment - text to printout should be cent if total less than 1€
+     *
      */
-    if (num < sumOfBill) console.log("Your paid is not enough!");
+    if (num < sumOfBill) {
+      let needMorePayment = sumOfBill - num;
+      let textMorePayment =
+        needMorePayment < 1
+          ? (needMorePayment * 100).toFixed() + " cent"
+          : needMorePayment.toFixed(2) + "€";
+      console.log(`You need to pay ${textMorePayment} more.`);
+    }
+    /*
+     * checking if the payment is just right amount
+     */
+    //
+    else if (num === sumOfBill) console.log("You've given right amount.");
     /**
-     * checking if just right paying amount.
-     */ else if (num === sumOfBill) console.log("You've given right amount.");
+     * the total payment is more than the bill total
+     */
+    //
     else {
       /**
        * calculate the change after receive money from customer
@@ -518,8 +535,8 @@ class Billing extends Shop {
 
         ------------------THE BILL------------------
 
-        Bill Nr. 16072022-1535
-        Bill Date. 16 - Jul - 2022
+        Bill Nr. 18072022-2014
+        Bill Date. 18 - Jul - 2022
 
         --------------------------------------------
 
@@ -529,11 +546,11 @@ class Billing extends Shop {
         Total :            56.31€
         Your paid :        100€
         You get back :     43.69€
-        Your change :      2 x 20€ note
-                           1 x 2€ coin
-                           1 x 1€ coin
-                           1 x 50 cent
-                           1 x 10 cent
+        Your change :      1 x 20€ note
+                           1 x 10€ note
+                           1 x 5€ note
+                           4 x 2€ coin
+                           3 x 20 cent
                            1 x 5 cent
                            2 x 2 cent
                        
@@ -577,7 +594,7 @@ bill1.makeBill(noodle, 1); //buying product - adding to bill
 bill1.getChange(100, countChange);
 
 //console.log(bill1.getChange("card")); //a situation if customer pay by card
-//bill1.getChange(56.21);
+//bill1.getChange(55.21);
 //bill1.getChange(56.31);
 /**
  * setting the second bill
@@ -615,18 +632,18 @@ function countChange(sum, givenSum) {
     ["fiftyNote", 50, 50],
     ["twentyNote", 20, 1],
     ["tenNote", 10, 1],
-    ["fiveNote", 5, 1],
+    ["fiveNote", 5, 100],
     ["twoEuroCoin", 2, 300],
-    ["oneEuroCoin", 1, 300],
+    ["oneEuroCoin", 1, 0],
   ];
 
   const coins = [
-    ["fiftyCoin", 50, 200],
+    ["fiftyCoin", 50, 0],
     ["twentyCoin", 20, 200],
     ["tenCoin", 10, 300],
     ["fiveCentCoin", 5, 300],
     ["twoCentCoin", 2, 300],
-    ["oneCentCoin", 1, 300],
+    ["oneCentCoin", 1, 0],
   ];
 
   /**
@@ -704,7 +721,7 @@ function countChange(sum, givenSum) {
       if (val[1] <= 20) exeRoundArr.push(val);
     });
     let amount = exeRoundArr[0][2];
-    roundChange = amountToChange(43, amount, exeRoundArr);
+    roundChange = amountToChange(roundSum, amount, exeRoundArr);
     roundChange.forEach(val => {
       getRoundChange[val] = (getRoundChange[val] || 0) + 1;
       /**
@@ -848,6 +865,7 @@ function amountToChange(num, amt, arr) {
       } else {
         arr.shift();
         amt = arr[i][2];
+        if (arr.length === 1 && arr[i][2] === 0) return num;
         return amountToChange(num, amt, arr);
       }
     }
